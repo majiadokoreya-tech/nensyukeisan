@@ -1,1 +1,541 @@
-# sedorikeisan
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>せどり利益計算機</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;700;900&display=swap');
+
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface2: #242424;
+    --border: #2e2e2e;
+    --accent: #c8ff00;
+    --accent2: #ff6b35;
+    --red: #ff4444;
+    --text: #f0f0f0;
+    --muted: #666;
+    --mono: 'DM Mono', monospace;
+    --sans: 'Zen Kaku Gothic New', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    padding: 0 0 40px;
+  }
+
+  /* ヘッダー */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  header h1 {
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-family: var(--mono);
+  }
+  header span {
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+
+  .container { padding: 20px 16px; max-width: 480px; margin: 0 auto; }
+
+  /* 入力カード */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-family: var(--mono);
+  }
+
+  /* 入力フィールド */
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+    letter-spacing: 0.05em;
+  }
+  .input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .input-wrap .unit {
+    position: absolute;
+    right: 14px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-family: var(--mono);
+    pointer-events: none;
+  }
+  input[type="number"] {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 13px 40px 13px 16px;
+    font-size: 1.2rem;
+    font-family: var(--mono);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  input[type="number"]:focus {
+    border-color: var(--accent);
+  }
+  input[type="number"]::placeholder { color: #444; }
+
+  /* 手数料トグル */
+  .fee-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-bottom: 10px;
+  }
+  .fee-label { font-size: 0.82rem; color: var(--muted); }
+  .fee-val { font-size: 0.9rem; font-family: var(--mono); color: var(--text); }
+
+  /* 仕切り */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 14px 0;
+  }
+
+  /* 結果カード */
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: border-color 0.3s;
+  }
+  .result-card.profit { border-color: var(--accent); }
+  .result-card.loss   { border-color: var(--red); }
+
+  .result-main {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .result-label {
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-family: var(--mono);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .result-amount {
+    font-size: 2.6rem;
+    font-weight: 900;
+    font-family: var(--mono);
+    line-height: 1;
+    transition: color 0.3s;
+    color: var(--muted);
+  }
+  .result-amount.profit { color: var(--accent); }
+  .result-amount.loss   { color: var(--red); }
+
+  .result-margin {
+    text-align: right;
+  }
+  .margin-num {
+    font-size: 1.8rem;
+    font-weight: 900;
+    font-family: var(--mono);
+    transition: color 0.3s;
+    color: var(--muted);
+  }
+  .margin-num.profit { color: var(--accent); }
+  .margin-num.loss   { color: var(--red); }
+
+  /* 内訳 */
+  .breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.82rem;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .breakdown-row:last-child { border-bottom: none; }
+  .breakdown-row .bk-label { color: var(--muted); }
+  .breakdown-row .bk-val { font-family: var(--mono); }
+  .breakdown-row .bk-val.neg { color: #ff7070; }
+  .breakdown-row .bk-val.pos { color: var(--text); }
+
+  /* 判定バッジ */
+  .verdict {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-top: 14px;
+    transition: all 0.3s;
+  }
+  .verdict.buy  { background: rgba(200,255,0,0.12); color: var(--accent); border: 1px solid rgba(200,255,0,0.3); }
+  .verdict.pass { background: rgba(255,68,68,0.12);  color: var(--red);    border: 1px solid rgba(255,68,68,0.3); }
+  .verdict.neutral { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+
+  /* ROIスライダー表示 */
+  .roi-bar-wrap { margin-top: 14px; }
+  .roi-bar-label { font-size: 0.68rem; color: var(--muted); margin-bottom: 6px; font-family: var(--mono); }
+  .roi-bar-track {
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .roi-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.4s cubic-bezier(.22,.68,0,1.2), background 0.3s;
+  }
+
+  /* クリアボタン */
+  .btn-clear {
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.05em;
+  }
+  .btn-clear:active { background: var(--surface2); color: var(--text); }
+
+  /* 目安表 */
+  .guide {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+  }
+  .guide-title {
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-family: var(--mono);
+    margin-bottom: 12px;
+  }
+  .guide-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .guide-row:last-child { border-bottom: none; }
+  .guide-row span { font-family: var(--mono); color: var(--text); }
+
+  /* 送料プリセット */
+  .preset-btns {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .preset-btn {
+    padding: 5px 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--muted);
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: var(--mono);
+    white-space: nowrap;
+  }
+  .preset-btn:active, .preset-btn.active {
+    background: rgba(200,255,0,0.1);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>SEDORI_CALC</h1>
+  <span>メルカリ利益計算機</span>
+</header>
+
+<div class="container">
+
+  <!-- 入力 -->
+  <div class="card">
+    <div class="card-title">INPUT</div>
+
+    <div class="field">
+      <label>仕入れ値</label>
+      <div class="input-wrap">
+        <input type="number" id="costInput" placeholder="0" inputmode="numeric" min="0" oninput="calc()">
+        <span class="unit">円</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>売値（メルカリ出品価格）</label>
+      <div class="input-wrap">
+        <input type="number" id="priceInput" placeholder="0" inputmode="numeric" min="0" oninput="calc()">
+        <span class="unit">円</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="fee-row">
+      <span class="fee-label">メルカリ手数料</span>
+      <span class="fee-val" id="mercariFeeTxt">—</span>
+    </div>
+
+    <div class="field">
+      <label>送料</label>
+      <div class="input-wrap">
+        <input type="number" id="shippingInput" placeholder="0" inputmode="numeric" min="0" oninput="calc()">
+        <span class="unit">円</span>
+      </div>
+      <div class="preset-btns">
+        <button class="preset-btn" onclick="setShipping(185, this)">ネコポス 185</button>
+        <button class="preset-btn" onclick="setShipping(225, this)">宅急便コンパクト 225</button>
+        <button class="preset-btn" onclick="setShipping(750, this)">宅急便(60) 750</button>
+        <button class="preset-btn" onclick="setShipping(175, this)">ゆうパケット 175</button>
+        <button class="preset-btn" onclick="setShipping(0, this)">送料込み 0</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>その他費用（梱包材など）</label>
+      <div class="input-wrap">
+        <input type="number" id="otherInput" placeholder="0" inputmode="numeric" min="0" oninput="calc()">
+        <span class="unit">円</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 結果 -->
+  <div class="result-card" id="resultCard">
+    <div class="result-main">
+      <div>
+        <span class="result-label">純利益</span>
+        <div class="result-amount" id="profitAmt">——</div>
+      </div>
+      <div class="result-margin">
+        <span class="result-label" style="text-align:right; display:block;">利益率</span>
+        <div class="margin-num" id="marginNum">——</div>
+      </div>
+    </div>
+
+    <div class="breakdown" id="breakdown">
+      <div class="breakdown-row">
+        <span class="bk-label">売上</span>
+        <span class="bk-val pos" id="bkPrice">—</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="bk-label">メルカリ手数料 (10%)</span>
+        <span class="bk-val neg" id="bkFee">—</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="bk-label">送料</span>
+        <span class="bk-val neg" id="bkShip">—</span>
+      </div>
+      <div class="breakdown-row">
+        <span class="bk-label">仕入れ値</span>
+        <span class="bk-val neg" id="bkCost">—</span>
+      </div>
+      <div class="breakdown-row" id="bkOtherRow" style="display:none">
+        <span class="bk-label">その他</span>
+        <span class="bk-val neg" id="bkOther">—</span>
+      </div>
+    </div>
+
+    <div id="roiBarWrap" class="roi-bar-wrap" style="display:none">
+      <div class="roi-bar-label">利益率バー</div>
+      <div class="roi-bar-track"><div class="roi-bar-fill" id="roiFill"></div></div>
+    </div>
+
+    <div id="verdictWrap">
+      <span class="verdict neutral" id="verdict">数値を入力してください</span>
+    </div>
+  </div>
+
+  <!-- 送料目安 -->
+  <div class="guide">
+    <div class="guide-title">らくらくメルカリ便 送料目安</div>
+    <div class="guide-row">ネコポス（A4・厚3cm・1kg以内）<span>185円</span></div>
+    <div class="guide-row">宅急便コンパクト<span>225円</span></div>
+    <div class="guide-row">宅急便 60サイズ<span>750円</span></div>
+    <div class="guide-row">宅急便 80サイズ<span>850円</span></div>
+    <div class="guide-row">宅急便 100サイズ<span>1,050円</span></div>
+    <div class="guide-row">ゆうパケット（3cm以内）<span>175円</span></div>
+    <div class="guide-row">ゆうパケットポスト<span>215円</span></div>
+  </div>
+
+  <button class="btn-clear" onclick="clearAll()">↺ リセット</button>
+
+</div>
+
+<script>
+function fmt(n) {
+  return n.toLocaleString('ja-JP') + '円';
+}
+
+function calc() {
+  const price    = parseInt(document.getElementById('priceInput').value)    || 0;
+  const cost     = parseInt(document.getElementById('costInput').value)     || 0;
+  const shipping = parseInt(document.getElementById('shippingInput').value) || 0;
+  const other    = parseInt(document.getElementById('otherInput').value)    || 0;
+
+  const fee = Math.floor(price * 0.1);
+  document.getElementById('mercariFeeTxt').textContent = price > 0 ? fmt(fee) : '—';
+
+  if (price === 0 && cost === 0) {
+    resetDisplay();
+    return;
+  }
+
+  const profit = price - fee - shipping - cost - other;
+  const margin = price > 0 ? (profit / price * 100) : 0;
+
+  // メイン表示
+  const profitEl  = document.getElementById('profitAmt');
+  const marginEl  = document.getElementById('marginNum');
+  const cardEl    = document.getElementById('resultCard');
+
+  profitEl.textContent = (profit > 0 ? '+' : '') + fmt(profit);
+  marginEl.textContent = margin.toFixed(1) + '%';
+
+  const isProfit = profit > 0;
+  profitEl.className = 'result-amount ' + (profit > 0 ? 'profit' : profit < 0 ? 'loss' : '');
+  marginEl.className = 'margin-num '    + (profit > 0 ? 'profit' : profit < 0 ? 'loss' : '');
+  cardEl.className   = 'result-card '  + (profit > 0 ? 'profit' : profit < 0 ? 'loss' : '');
+
+  // 内訳
+  document.getElementById('bkPrice').textContent = fmt(price);
+  document.getElementById('bkFee').textContent   = '−' + fmt(fee);
+  document.getElementById('bkShip').textContent  = '−' + fmt(shipping);
+  document.getElementById('bkCost').textContent  = '−' + fmt(cost);
+
+  if (other > 0) {
+    document.getElementById('bkOtherRow').style.display = 'flex';
+    document.getElementById('bkOther').textContent = '−' + fmt(other);
+  } else {
+    document.getElementById('bkOtherRow').style.display = 'none';
+  }
+
+  // ROIバー
+  document.getElementById('roiBarWrap').style.display = 'block';
+  const fillPct = Math.min(Math.max(margin, 0), 50) / 50 * 100;
+  const fill = document.getElementById('roiFill');
+  fill.style.width = fillPct + '%';
+  fill.style.background = profit > 0
+    ? `linear-gradient(90deg, #6aff00, #c8ff00)`
+    : `linear-gradient(90deg, #ff4444, #ff7070)`;
+
+  // 判定
+  const v = document.getElementById('verdict');
+  if (profit <= 0) {
+    v.textContent = '✗ 赤字・見送り';
+    v.className = 'verdict pass';
+  } else if (margin >= 20) {
+    v.textContent = '◎ 優良案件！ 仕入れGO';
+    v.className = 'verdict buy';
+  } else if (margin >= 10) {
+    v.textContent = '○ 利益あり・仕入れOK';
+    v.className = 'verdict buy';
+  } else {
+    v.textContent = '△ 利益薄め・要検討';
+    v.className = 'verdict neutral';
+  }
+}
+
+function setShipping(val, el) {
+  document.getElementById('shippingInput').value = val;
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  calc();
+}
+
+function resetDisplay() {
+  document.getElementById('profitAmt').textContent = '——';
+  document.getElementById('profitAmt').className = 'result-amount';
+  document.getElementById('marginNum').textContent = '——';
+  document.getElementById('marginNum').className = 'margin-num';
+  document.getElementById('resultCard').className = 'result-card';
+  document.getElementById('bkPrice').textContent = '—';
+  document.getElementById('bkFee').textContent   = '—';
+  document.getElementById('bkShip').textContent  = '—';
+  document.getElementById('bkCost').textContent  = '—';
+  document.getElementById('bkOtherRow').style.display = 'none';
+  document.getElementById('roiBarWrap').style.display = 'none';
+  document.getElementById('verdict').textContent = '数値を入力してください';
+  document.getElementById('verdict').className = 'verdict neutral';
+}
+
+function clearAll() {
+  ['costInput','priceInput','shippingInput','otherInput'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('mercariFeeTxt').textContent = '—';
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  resetDisplay();
+}
+</script>
+</body>
+</html>

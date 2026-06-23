@@ -1,152 +1,77 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>夫婦年収管理アプリ</title>
-  <style>
-    :root{
-      --bg:#f4f7fb;--card:#fff;--text:#1f2937;--muted:#6b7280;--main:#2563eb;--main-dark:#1d4ed8;--danger:#dc2626;--warn:#f59e0b;--ok:#16a34a;--border:#e5e7eb;--soft:#f9fafb;
-    }
-    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:14px}.app{max-width:920px;margin:0 auto}h1{font-size:24px;margin:8px 0 4px}h2{font-size:20px;margin:0 0 12px}.sub{color:var(--muted);font-size:14px;margin-bottom:16px}.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 4px 12px rgba(0,0,0,.04)}label{display:block;font-weight:800;margin:12px 0 6px}input,textarea,select{width:100%;font-size:17px;padding:11px;border:1px solid var(--border);border-radius:12px;background:#fff}textarea{min-height:72px;resize:vertical}.top-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.result{background:var(--soft);border:1px solid var(--border);border-radius:14px;padding:12px}.result .title{font-size:13px;color:var(--muted)}.result .num{font-size:21px;font-weight:900;margin-top:4px}.status{border-radius:14px;padding:12px;font-weight:900;margin-top:12px;line-height:1.5}.ok{background:#dcfce7;color:#14532d}.warn{background:#fef3c7;color:#78350f}.danger{background:#fee2e2;color:#7f1d1d}.line-list{display:grid;gap:8px;margin-top:12px}.line-item{display:flex;justify-content:space-between;gap:10px;padding:10px;border:1px solid var(--border);border-radius:12px;background:#fff;font-size:15px}.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}button{border:none;border-radius:12px;padding:12px 14px;font-size:16px;font-weight:900;cursor:pointer}.primary{background:var(--main);color:#fff}.primary:active{background:var(--main-dark)}.gray{background:#e5e7eb;color:#111827}.red{background:#fee2e2;color:#991b1b}.green{background:#dcfce7;color:#14532d}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}.tab{background:#e5e7eb;color:#111827}.tab.active{background:var(--main);color:#fff}.month-card{border:1px solid var(--border);border-radius:16px;background:#fff;padding:12px;margin-bottom:12px}.month-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}.month-title{font-size:18px;font-weight:900}.month-sum{font-size:13px;color:var(--muted);text-align:right}.month-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.small-note{font-size:12px;color:var(--muted);line-height:1.5}.records-table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:10px 6px;border-bottom:1px solid var(--border);text-align:right}th:first-child,td:first-child{text-align:left}.actions{display:flex;gap:6px;justify-content:flex-end}.mini{padding:7px 9px;font-size:13px;border-radius:9px}.empty{color:var(--muted);text-align:center;padding:14px}.hidden{display:none!important}.import-box{white-space:pre-wrap;font-family:ui-monospace,Menlo,monospace;font-size:12px}@media(min-width:720px){.result-grid{grid-template-columns:repeat(4,1fr)}.month-grid{grid-template-columns:repeat(4,1fr)}}
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>夫婦年収管理アプリ</title>
+<style>
+:root{--bg:#eef3fb;--card:#fff;--text:#14213d;--muted:#64748b;--main:#2563eb;--main2:#1d4ed8;--ok:#16a34a;--warn:#f59e0b;--danger:#dc2626;--border:#e2e8f0;--soft:#f8fafc;--shadow:0 8px 24px rgba(15,23,42,.08)}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.app{max-width:980px;margin:auto;padding:14px 12px 88px}.hero{background:linear-gradient(135deg,#2563eb,#38bdf8);color:#fff;border-radius:22px;padding:18px;margin:6px 0 14px;box-shadow:var(--shadow)}.hero h1{margin:0 0 6px;font-size:25px}.hero p{margin:0;opacity:.95;font-size:14px}.tabs{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:8px 10px;z-index:10}.tab{border:0;border-radius:14px;padding:10px 4px;font-weight:900;background:#e5e7eb;color:#334155;font-size:13px}.tab.active{background:var(--main);color:#fff}.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:15px;margin-bottom:12px;box-shadow:var(--shadow)}h2{font-size:19px;margin:0 0 12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.biggrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kpi{border:1px solid var(--border);border-radius:18px;padding:13px;background:var(--soft)}.kpi .label{font-size:12px;color:var(--muted);font-weight:800}.kpi .num{font-size:22px;font-weight:1000;margin-top:5px;letter-spacing:-.5px}.kpi.primary{background:#eff6ff;border-color:#bfdbfe}.kpi.ok{background:#ecfdf5;border-color:#bbf7d0}.kpi.warn{background:#fffbeb;border-color:#fde68a}.kpi.danger{background:#fef2f2;border-color:#fecaca}.wide{grid-column:1/-1}.status{border-radius:16px;padding:12px;font-weight:900;line-height:1.45;margin-top:10px}.status.ok{background:#dcfce7;color:#14532d}.status.warn{background:#fef3c7;color:#78350f}.status.danger{background:#fee2e2;color:#7f1d1d}.row{display:flex;justify-content:space-between;gap:10px;align-items:center;border-bottom:1px solid var(--border);padding:10px 0}.row:last-child{border-bottom:0}.row b{font-size:15px}.row span{font-weight:900;text-align:right}.selectrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}label{font-size:13px;color:#334155;font-weight:900;margin-bottom:5px;display:block}select,input,textarea{width:100%;border:1px solid var(--border);border-radius:14px;padding:11px;font-size:16px;background:#fff}textarea{min-height:76px;resize:vertical}.month{border:1px solid var(--border);border-radius:18px;margin:10px 0;background:#fff;overflow:hidden}.month summary{list-style:none;cursor:pointer;padding:13px;display:flex;justify-content:space-between;align-items:center;background:#f8fafc}.month summary::-webkit-details-marker{display:none}.m-title{font-weight:1000}.m-sum{font-size:12px;color:var(--muted);text-align:right}.m-body{padding:12px}.inputgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}button{border:0;border-radius:14px;padding:12px;font-size:15px;font-weight:1000}.blue{background:var(--main);color:#fff}.gray{background:#e5e7eb;color:#111827}.red{background:#fee2e2;color:#991b1b}.green{background:#dcfce7;color:#14532d}.mini{padding:8px 9px;font-size:12px;border-radius:10px}.hidden{display:none!important}.note{font-size:12px;color:var(--muted);line-height:1.55}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px;min-width:660px}th,td{border-bottom:1px solid var(--border);padding:9px 6px;text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}.barbox{display:grid;gap:10px}.barrow{display:grid;grid-template-columns:54px 1fr 90px;gap:8px;align-items:center;font-size:12px}.bar{height:14px;background:#e5e7eb;border-radius:999px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,#60a5fa,#2563eb);border-radius:999px}.family{display:grid;gap:10px}.person{border:1px solid var(--border);background:#fff;border-radius:18px;padding:12px}.person h3{margin:0 0 8px;font-size:16px}.actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}@media(min-width:760px){.biggrid{grid-template-columns:repeat(4,1fr)}.inputgrid{grid-template-columns:repeat(4,1fr)}.tabs{position:static;border:0;border-radius:20px;margin-bottom:12px;box-shadow:var(--shadow)}.app{padding-bottom:20px}}
+</style>
 </head>
 <body>
 <div class="app">
-  <h1>夫婦年収管理アプリ</h1>
-  <div class="sub">スプレッドシートの入力済みデータ入り。毎月入力 → 年間合計・世帯収入・妻の130万/150万/180万ラインを自動計算</div>
-
+  <div class="hero"><h1>夫婦年収管理</h1><p>毎月入力・年間合計・妻の年収ラインを見やすく管理</p></div>
   <div class="tabs">
-    <button id="tabInput" class="tab active" onclick="showTab('input')">毎月入力</button>
-    <button id="tabRecords" class="tab" onclick="showTab('records')">年ごとの記録</button>
+    <button class="tab active" data-tab="home" onclick="showTab('home')">ホーム</button>
+    <button class="tab" data-tab="input" onclick="showTab('input')">入力</button>
+    <button class="tab" data-tab="summary" onclick="showTab('summary')">集計</button>
+    <button class="tab" data-tab="family" onclick="showTab('family')">家族</button>
   </div>
 
-  <section id="inputSection">
+  <section id="homeSec">
     <div class="card">
-      <div class="top-grid">
-        <div><label for="year">年</label><input id="year" type="number" inputmode="numeric" /></div>
-        <div><label for="unitMode">入力単位</label><select id="unitMode"><option value="yen">円で入力</option><option value="man">万円で入力</option></select></div>
+      <div class="selectrow">
+        <div><label>表示する年</label><select id="yearSelect" onchange="changeYear(this.value)"></select></div>
+        <div><label>入力単位</label><select id="unitMode" onchange="saveSettings(); renderAll()"><option value="yen">円</option><option value="man">万円</option></select></div>
       </div>
-      <p class="small-note">例：円入力なら「500000」、万円入力なら「50」と入力。入力すると自動保存されます。</p>
     </div>
+    <div class="biggrid" id="dashboardCards"></div>
+    <div class="card"><h2>妻の年収ライン</h2><div id="wifeStatus"></div><div id="lineRows"></div></div>
+    <div class="card"><h2>今年の入力状況</h2><div id="inputProgress"></div></div>
+  </section>
 
+  <section id="inputSec" class="hidden">
     <div class="card">
-      <h2>年間合計</h2>
-      <div class="result-grid">
-        <div class="result"><div class="title">私の額面</div><div class="num" id="myGrossTotal">0円</div></div>
-        <div class="result"><div class="title">私の手取り</div><div class="num" id="myTakeTotal">0円</div></div>
-        <div class="result"><div class="title">妻の額面</div><div class="num" id="wifeGrossTotal">0円</div></div>
-        <div class="result"><div class="title">妻の手取り</div><div class="num" id="wifeTakeTotal">0円</div></div>
-        <div class="result"><div class="title">世帯年収</div><div class="num" id="houseGrossTotal">0円</div></div>
-        <div class="result"><div class="title">世帯手取り</div><div class="num" id="houseTakeTotal">0円</div></div>
-        <div class="result"><div class="title">月平均 額面</div><div class="num" id="avgGross">0円</div></div>
-        <div class="result"><div class="title">月平均 手取り</div><div class="num" id="avgTake">0円</div></div>
-      </div>
-      <div id="wifeStatus" class="status ok">妻の年収ラインを表示します</div>
-      <div class="line-list" id="lineList"></div>
-    </div>
-
-    <div class="card">
-      <h2>毎月入力</h2>
+      <h2>月別入力</h2>
+      <p class="note">入力すると自動保存。賞与も1行として管理できます。</p>
       <div id="monthsArea"></div>
-      <label for="yearMemo">年間メモ</label>
-      <textarea id="yearMemo" placeholder="例：妻は130万円以内予定、賞与あり、来年は180万円を目標など"></textarea>
-      <div class="btns">
-        <button class="primary" onclick="saveCurrentYear(true)">保存する</button>
-        <button class="gray" onclick="clearCurrentYear()">この年をクリア</button>
-      </div>
+      <div class="btns"><button class="gray" onclick="addYear()">新しい年を追加</button><button class="red" onclick="clearYear()">この年をクリア</button></div>
     </div>
   </section>
 
-  <section id="recordsSection" class="hidden">
-    <div class="card">
-      <h2>年ごとの記録</h2>
-      <div id="recordsArea"></div>
-      <div class="btns">
-        <button class="gray" onclick="exportData()">バックアップ出力</button>
-        <button class="red" onclick="deleteAll()">全削除</button>
-      </div>
-      <label for="importText">バックアップ読込</label>
-      <textarea id="importText" class="import-box" placeholder="バックアップ出力した文字を貼り付け"></textarea>
-      <button class="primary" style="width:100%;margin-top:8px" onclick="importData()">読込する</button>
-    </div>
+  <section id="summarySec" class="hidden">
+    <div class="card"><h2>年ごとの比較</h2><div class="tablewrap"><table id="yearTable"></table></div></div>
+    <div class="card"><h2>世帯年収グラフ</h2><div class="barbox" id="houseBars"></div></div>
+    <div class="card"><h2>バックアップ</h2><div class="btns"><button class="gray" onclick="exportData()">バックアップ出力</button><button class="blue" onclick="importData()">バックアップ読込</button></div><textarea id="backupText" placeholder="バックアップ文字をここに貼り付け"></textarea></div>
+  </section>
 
-    <div class="card">
-      <h2>スプレッドシート取込</h2>
-      <p class="small-note">今までの「年間収入」シートの入力済みデータを登録できます。</p>
-      <button class="green" style="width:100%" onclick="loadPresetSheetData()">今回の入力済みデータを入れる</button>
-    </div>
+  <section id="familySec" class="hidden">
+    <div class="card"><h2>家族メモ</h2><p class="note">共有は後からでOK。まずはこのスマホ内に保存します。</p><div class="family" id="familyArea"></div><button class="blue" style="width:100%;margin-top:10px" onclick="saveFamilyFromInputs()">家族情報を保存</button></div>
   </section>
 </div>
 <script>
-const KEY='fuufu_income_monthly_records_v3_full_autofill';
-const MONTHS=['1月','2月','3月','4月','5月','6月','夏季賞与','7月','8月','9月','10月','11月','冬季賞与','12月'];
-const yen=n=>(Math.round(Number(n)||0)).toLocaleString('ja-JP')+'円';
-const el=id=>document.getElementById(id);
-function factor(){return el('unitMode').value==='man'?10000:1}
-function displayValue(yenValue){const f=factor();return yenValue? (yenValue/f) : ''}
-function inputToYen(v){return (Number(v)||0)*factor()}
-function blankMonths(){return MONTHS.map(name=>({name,myGross:0,myTake:0,wifeGross:0,wifeTake:0,memo:''}))}
-function loadRecords(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch{return[]}}
-function storeRecords(records){localStorage.setItem(KEY,JSON.stringify(records))}
-function currentYear(){return Number(el('year').value)||new Date().getFullYear()}
-function getCurrentMonths(){return MONTHS.map((name,i)=>({name,myGross:inputToYen(el('myGross_'+i).value),myTake:inputToYen(el('myTake_'+i).value),wifeGross:inputToYen(el('wifeGross_'+i).value),wifeTake:inputToYen(el('wifeTake_'+i).value),memo:el('memo_'+i).value.trim()}))}
-function totals(months){return months.reduce((a,m)=>{a.myGross+=Number(m.myGross)||0;a.myTake+=Number(m.myTake)||0;a.wifeGross+=Number(m.wifeGross)||0;a.wifeTake+=Number(m.wifeTake)||0;return a},{myGross:0,myTake:0,wifeGross:0,wifeTake:0})}
-function renderMonths(months=blankMonths()){
-  el('monthsArea').innerHTML=MONTHS.map((name,i)=>{const m=months[i]||{};return `<div class="month-card"><div class="month-head"><div class="month-title">${name}</div><div class="month-sum" id="sum_${i}">月合計 0円</div></div><div class="month-grid"><div><label>私の額面</label><input id="myGross_${i}" type="number" inputmode="decimal" value="${displayValue(m.myGross)}"></div><div><label>私の手取り</label><input id="myTake_${i}" type="number" inputmode="decimal" value="${displayValue(m.myTake)}"></div><div><label>妻の額面</label><input id="wifeGross_${i}" type="number" inputmode="decimal" value="${displayValue(m.wifeGross)}"></div><div><label>妻の手取り</label><input id="wifeTake_${i}" type="number" inputmode="decimal" value="${displayValue(m.wifeTake)}"></div></div><label>メモ</label><input id="memo_${i}" type="text" value="${escapeAttr(m.memo||'')}" placeholder="例：残業多め、賞与など"></div>`}).join('');
-  document.querySelectorAll('#monthsArea input').forEach(x=>x.addEventListener('input',()=>{calc();autoSave()}));calc();
-}
-function escapeAttr(s){return String(s).replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;').replaceAll('>','&gt;')}
-function calc(){const months=getCurrentMonths();const t=totals(months);el('myGrossTotal').textContent=yen(t.myGross);el('myTakeTotal').textContent=yen(t.myTake);el('wifeGrossTotal').textContent=yen(t.wifeGross);el('wifeTakeTotal').textContent=yen(t.wifeTake);el('houseGrossTotal').textContent=yen(t.myGross+t.wifeGross);el('houseTakeTotal').textContent=yen(t.myTake+t.wifeTake);el('avgGross').textContent=yen((t.myGross+t.wifeGross)/12);el('avgTake').textContent=yen((t.myTake+t.wifeTake)/12);months.forEach((m,i)=>{el('sum_'+i).textContent='月合計 '+yen((m.myGross||0)+(m.wifeGross||0))});updateWifeStatus(t.wifeGross)}
-function updateWifeStatus(wifeIncome){const box=el('wifeStatus');box.className='status';let msg='';if(!wifeIncome){box.classList.add('ok');msg='妻の年収を入力するとライン判定します。'}else if(wifeIncome<=1300000){box.classList.add('ok');msg='妻の年収：130万円以内です。扶養ラインを意識するなら安全寄り。'}else if(wifeIncome<=1500000){box.classList.add('warn');msg='妻の年収：130万円超〜150万円以内です。社会保険や扶養の確認が必要。'}else if(wifeIncome<=1800000){box.classList.add('warn');msg='妻の年収：150万円超〜180万円以内です。働き損にならないか確認したいライン。'}else{box.classList.add('danger');msg='妻の年収：180万円超です。扶養より世帯手取り重視で考えるライン。'}box.textContent=msg;el('lineList').innerHTML=[1300000,1500000,1800000].map(line=>{const diff=line-wifeIncome;const text=diff>=0?`あと ${yen(diff)}`:`${yen(Math.abs(diff))} 超過`;return `<div class="line-item"><strong>${line/10000}万円ライン</strong><span>${text}</span></div>`}).join('')}
-function makeRecord(){const months=getCurrentMonths();const t=totals(months);return{year:currentYear(),months,memo:el('yearMemo').value.trim(),myIncome:t.myGross,myTakeHome:t.myTake,wifeIncome:t.wifeGross,wifeTakeHome:t.wifeTake,updatedAt:new Date().toLocaleString('ja-JP')}}
-function saveCurrentYear(showAlert=false){const record=makeRecord();let records=loadRecords();const idx=records.findIndex(r=>Number(r.year)===Number(record.year));if(idx>=0)records[idx]=record;else records.push(record);records.sort((a,b)=>Number(b.year)-Number(a.year));storeRecords(records);renderRecords();if(showAlert)alert('保存しました')}
-let saveTimer=null;function autoSave(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>saveCurrentYear(false),400)}
-function loadYear(year){const r=loadRecords().find(x=>Number(x.year)===Number(year));el('year').value=year;el('yearMemo').value=r?.memo||'';renderMonths(r?.months||blankMonths());showTab('input');scrollTo({top:0,behavior:'smooth'})}
-function clearCurrentYear(){if(!confirm(currentYear()+'年の入力をクリアしますか？'))return;el('yearMemo').value='';renderMonths(blankMonths());saveCurrentYear(false)}
-function renderRecords(){const records=loadRecords();const area=el('recordsArea');if(!records.length){area.innerHTML='<div class="empty">まだ記録がありません</div>';return}area.innerHTML=`<table class="records-table"><thead><tr><th>年</th><th>世帯年収</th><th>世帯手取り</th><th>妻年収</th><th>操作</th></tr></thead><tbody>${records.map(r=>`<tr><td>${r.year}</td><td>${yen((r.myIncome||0)+(r.wifeIncome||0))}</td><td>${yen((r.myTakeHome||0)+(r.wifeTakeHome||0))}</td><td>${yen(r.wifeIncome)}</td><td><div class="actions"><button class="mini gray" onclick="loadYear(${r.year})">開く</button><button class="mini red" onclick="deleteRecord(${r.year})">削除</button></div></td></tr>`).join('')}</tbody></table>`}
-function deleteRecord(year){if(!confirm(year+'年の記録を削除しますか？'))return;storeRecords(loadRecords().filter(r=>Number(r.year)!==Number(year)));renderRecords()}
-function deleteAll(){if(!confirm('すべての記録を削除しますか？'))return;localStorage.removeItem(KEY);renderRecords();renderMonths(blankMonths())}
-function exportData(){const text=JSON.stringify(loadRecords(),null,2);el('importText').value=text;if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('バックアップをコピーしました')).catch(()=>alert('下の欄に表示しました。手動でコピーしてください'))}else alert('下の欄に表示しました。手動でコピーしてください')}
-function importData(){try{const data=JSON.parse(el('importText').value);if(!Array.isArray(data))throw new Error();storeRecords(data);renderRecords();alert('読込しました')}catch{alert('読込できません。バックアップ文字を確認してください。')}}
-function showTab(tab){el('inputSection').classList.toggle('hidden',tab!=='input');el('recordsSection').classList.toggle('hidden',tab!=='records');el('tabInput').classList.toggle('active',tab==='input');el('tabRecords').classList.toggle('active',tab==='records');if(tab==='records')renderRecords()}
-function loadPresetSheetData(){
- const data={
-  2021:{myTake:[291015,310306,287407,301692,284738,306270,357674,285370,318498,338023,348612,343772,448849,554055],myGross:[376414,397858,372544,388106,369626,380020,451500,357001,393368,414275,428577,423852,579500,418990]},
-  2022:{myTake:[352157,343502,293889,371343,353024,331408,446347,352023,345314,322040,337628,315582,401188,528358],myGross:[432725,424062,370014,453200,434513,413456,576300,435977,428938,402805,429673,403729,507600,378941]},
-  2023:{myTake:[349124,320545,352998,342054,334431,325275,401564,45981,341492,311071,338475,400920,366058,533667],myGross:[443032,410072,449867,435633,424503,407850,497600,66580,436219,401499,428883,495920,496800,409896]},
-  2024:{myTake:[367132,374506,346986,402243,364520,401207,470446,383728,356626,341831,343830,385773,423297,460117],myGross:[458417,466982,436429,495893,456353,464539,574300,454701,427033,411746,422278,464515,538100,434424]},
-  2025:{myTake:[396970,387587,371574,435085,416550,400795,391386,389586,418833,331168,375151,375512,382967,613537],myGross:[488606,480444,461306,531282,510482,506405,531000,492067,524351,426579,487014,488714,519500,420971],wifeGross:[101420,113540,99065,89360,108190,118935,0,127690,128860,103130,111450,120540,0,59510]},
-  2026:{myTake:[362636,360267,350183,389206,360304,375863,0,0,0,0,0,0,0,0],myGross:[471775,471193,457584,497261,465640,487348,0,0,0,0,0,0,0,0],wifeGross:[102210,94930,100172,134860,132730,110623,0,0,0,0,0,0,0,0]}
- };
- let records=loadRecords();
- Object.entries(data).forEach(([year,d])=>{const months=MONTHS.map((name,i)=>({name,myGross:d.myGross[i]||0,myTake:d.myTake[i]||0,wifeGross:d.wifeGross?d.wifeGross[i]||0:0,wifeTake:0,memo:''}));const t=totals(months);const record={year:Number(year),months,memo:'スプレッドシートから取込',myIncome:t.myGross,myTakeHome:t.myTake,wifeIncome:t.wifeGross,wifeTakeHome:t.wifeTake,updatedAt:new Date().toLocaleString('ja-JP')};const idx=records.findIndex(r=>Number(r.year)===Number(year));if(idx>=0)records[idx]=record;else records.push(record)});
- records.sort((a,b)=>Number(b.year)-Number(a.year));storeRecords(records);renderRecords();alert('2021〜2026年を登録しました')
-}
-
-function seedPresetSheetDataIfEmpty(){
- const existing = loadRecords();
- if(existing.length) return;
- const data={
-  2021:{myTake:[291015,310306,287407,301692,284738,306270,357674,285370,318498,338023,348612,343772,448849,554055],myGross:[376414,397858,372544,388106,369626,380020,451500,357001,393368,414275,428577,423852,579500,418990]},
-  2022:{myTake:[352157,343502,293889,371343,353024,331408,446347,352023,345314,322040,337628,315582,401188,528358],myGross:[432725,424062,370014,453200,434513,413456,576300,435977,428938,402805,429673,403729,507600,378941]},
-  2023:{myTake:[349124,320545,352998,342054,334431,325275,401564,45981,341492,311071,338475,400920,366058,533667],myGross:[443032,410072,449867,435633,424503,407850,497600,66580,436219,401499,428883,495920,496800,409896]},
-  2024:{myTake:[367132,374506,346986,402243,364520,401207,470446,383728,356626,341831,343830,385773,423297,460117],myGross:[458417,466982,436429,495893,456353,464539,574300,454701,427033,411746,422278,464515,538100,434424]},
-  2025:{myTake:[396970,387587,371574,435085,416550,400795,391386,389586,418833,331168,375151,375512,382967,613537],myGross:[488606,480444,461306,531282,510482,506405,531000,492067,524351,426579,487014,488714,519500,420971],wifeGross:[101420,113540,99065,89360,108190,118935,0,127690,128860,103130,111450,120540,0,59510]},
-  2026:{myTake:[362636,360267,350183,389206,360304,375863,0,0,0,0,0,0,0,0],myGross:[471775,471193,457584,497261,465640,487348,0,0,0,0,0,0,0,0],wifeGross:[102210,94930,100172,134860,132730,110623,0,0,0,0,0,0,0,0]}
- };
- const records=[];
- Object.entries(data).forEach(([year,d])=>{
-   const months=MONTHS.map((name,i)=>({name,myGross:d.myGross[i]||0,myTake:d.myTake[i]||0,wifeGross:d.wifeGross?d.wifeGross[i]||0:0,wifeTake:0,memo:''}));
-   const t=totals(months);
-   records.push({year:Number(year),months,memo:'スプレッドシートから自動入力済み',myIncome:t.myGross,myTakeHome:t.myTake,wifeIncome:t.wifeGross,wifeTakeHome:t.wifeTake,updatedAt:new Date().toLocaleString('ja-JP')});
- });
- records.sort((a,b)=>Number(b.year)-Number(a.year));
- storeRecords(records);
-}
-
-seedPresetSheetDataIfEmpty();
-el('year').value=2026;el('year').addEventListener('input',()=>{const r=loadRecords().find(x=>Number(x.year)===currentYear());el('yearMemo').value=r?.memo||'';renderMonths(r?.months||blankMonths())});el('unitMode').addEventListener('change',()=>{const months=getCurrentMonths();renderMonths(months)});el('yearMemo').addEventListener('input',autoSave);const first=loadRecords().find(r=>Number(r.year)===currentYear());el('yearMemo').value=first?.memo||'';renderMonths(first?.months||blankMonths());renderRecords();
+const KEY='fuufu_income_manager_dashboard_v5';
+const SETTINGS='fuufu_income_manager_settings_v5';
+const FAMILY='fuufu_income_manager_family_v5';
+const labels=['1月','2月','3月','4月','5月','6月','夏季賞与','7月','8月','9月','10月','11月','冬季賞与','12月'];
+const defaultData={
+  2021:{months:[
+    {label:'1月',myTake:291015,myGross:376414,wifeGross:0,wifeTake:0},{label:'2月',myTake:310306,myGross:397858,wifeGross:0,wifeTake:0},{label:'3月',myTake:287407,myGross:372544,wifeGross:0,wifeTake:0},{label:'4月',myTake:301692,myGross:388106,wifeGross:0,wifeTake:0},{label:'5月',myTake:284738,myGross:369626,wifeGross:0,wifeTake:0},{label:'6月',myTake:306270,myGross:380020,wifeGross:0,wifeTake:0},{label:'夏季賞与',myTake:357674,myGross:451500,wifeGross:0,wifeTake:0},{label:'7月',myTake:285370,myGross:357001,wifeGross:0,wifeTake:0},{label:'8月',myTake:318498,myGross:393368,wifeGross:0,wifeTake:0},{label:'9月',myTake:338023,myGross:414275,wifeGross:0,wifeTake:0},{label:'10月',myTake:348612,myGross:428577,wifeGross:0,wifeTake:0},{label:'11月',myTake:343772,myGross:423852,wifeGross:0,wifeTake:0},{label:'冬季賞与',myTake:448849,myGross:579500,wifeGross:0,wifeTake:0},{label:'12月',myTake:554055,myGross:418990,wifeGross:0,wifeTake:0}]},
+  2022:{months:[
+    {label:'1月',myTake:352157,myGross:432725,wifeGross:0,wifeTake:0},{label:'2月',myTake:343502,myGross:424062,wifeGross:0,wifeTake:0},{label:'3月',myTake:293889,myGross:370014,wifeGross:0,wifeTake:0},{label:'4月',myTake:371343,myGross:453200,wifeGross:0,wifeTake:0},{label:'5月',myTake:353024,myGross:434513,wifeGross:0,wifeTake:0},{label:'6月',myTake:331408,myGross:413456,wifeGross:0,wifeTake:0},{label:'夏季賞与',myTake:446347,myGross:576300,wifeGross:0,wifeTake:0},{label:'7月',myTake:352023,myGross:435977,wifeGross:0,wifeTake:0},{label:'8月',myTake:345314,myGross:428938,wifeGross:0,wifeTake:0},{label:'9月',myTake:322040,myGross:402805,wifeGross:0,wifeTake:0},{label:'10月',myTake:337628,myGross:429673,wifeGross:0,wifeTake:0},{label:'11月',myTake:315582,myGross:403729,wifeGross:0,wifeTake:0},{label:'冬季賞与',myTake:401188,myGross:507600,wifeGross:0,wifeTake:0},{label:'12月',myTake:528358,myGross:378941,wifeGross:0,wifeTake:0}]},
+  2023:{months:[
+    {label:'1月',myTake:349124,myGross:443032,wifeGross:0,wifeTake:0},{label:'2月',myTake:320545,myGross:410072,wifeGross:0,wifeTake:0},{label:'3月',myTake:352998,myGross:449867,wifeGross:0,wifeTake:0},{label:'4月',myTake:342054,myGross:435633,wifeGross:0,wifeTake:0},{label:'5月',myTake:334431,myGross:424503,wifeGross:0,wifeTake:0},{label:'6月',myTake:325275,myGross:407850,wifeGross:0,wifeTake:0},{label:'夏季賞与',myTake:401564,myGross:497600,wifeGross:0,wifeTake:0},{label:'7月',myTake:45981,myGross:66580,wifeGross:0,wifeTake:0},{label:'8月',myTake:341492,myGross:436219,wifeGross:0,wifeTake:0},{label:'9月',myTake:311071,myGross:401499,wifeGross:0,wifeTake:0},{label:'10月',myTake:338475,myGross:428883,wifeGross:0,wifeTake:0},{label:'11月',myTake:400920,myGross:495920,wifeGross:0,wifeTake:0},{label:'冬季賞与',myTake:366058,myGross:496800,wifeGross:0,wifeTake:0},{label:'12月',myTake:533667,myGross:409896,wifeGross:0,wifeTake:0}]},
+  2024:{months:[
+    {label:'1月',myTake:367132,myGross:458417,wifeGross:0,wifeTake:0},{label:'2月',myTake:374506,myGross:466982,wifeGross:0,wifeTake:0},{label:'3月',myTake:346986,myGross:436429,wifeGross:0,wifeTake:0},{label:'4月',myTake:402243,myGross:495893,wifeGross:0,wifeTake:0},{label:'5月',myTake:364520,myGross:456353,wifeGross:0,wifeTake:0},{label:'6月',myTake:401207,myGross:464539,wifeGross:0,wifeTake:0},{label:'夏季賞与',myTake:470446,myGross:574300,wifeGross:0,wifeTake:0},{label:'7月',myTake:383728,myGross:454701,wifeGross:0,wifeTake:0},{label:'8月',myTake:356626,myGross:427033,wifeGross:0,wifeTake:0},{label:'9月',myTake:341831,myGross:411746,wifeGross:0,wifeTake:0},{label:'10月',myTake:343830,myGross:422278,wifeGross:0,wifeTake:0},{label:'11月',myTake:385773,myGross:464515,wifeGross:0,wifeTake:0},{label:'冬季賞与',myTake:423297,myGross:538100,wifeGross:0,wifeTake:0},{label:'12月',myTake:460117,myGross:434424,wifeGross:0,wifeTake:0}]},
+  2025:{months:[
+    {label:'1月',myTake:396970,myGross:488606,wifeGross:101420,wifeTake:0},{label:'2月',myTake:387587,myGross:480444,wifeGross:113540,wifeTake:0},{label:'3月',myTake:371574,myGross:461306,wifeGross:99065,wifeTake:0},{label:'4月',myTake:435085,myGross:531282,wifeGross:89360,wifeTake:0},{label:'5月',myTake:416550,myGross:510482,wifeGross:108190,wifeTake:0},{label:'6月',myTake:400795,myGross:506405,wifeGross:118935,wifeTake:0},{label:'夏季賞与',myTake:391386,myGross:531000,wifeGross:0,wifeTake:0},{label:'7月',myTake:389586,myGross:492067,wifeGross:127690,wifeTake:0},{label:'8月',myTake:418833,myGross:524351,wifeGross:128860,wifeTake:0},{label:'9月',myTake:331168,myGross:426579,wifeGross:103130,wifeTake:0},{label:'10月',myTake:375151,myGross:487014,wifeGross:111450,wifeTake:0},{label:'11月',myTake:375512,myGross:488714,wifeGross:120540,wifeTake:0},{label:'冬季賞与',myTake:382967,myGross:519500,wifeGross:0,wifeTake:0},{label:'12月',myTake:613537,myGross:420971,wifeGross:59510,wifeTake:0}]},
+  2026:{months:[
+    {label:'1月',myTake:362636,myGross:471775,wifeGross:102210,wifeTake:0},{label:'2月',myTake:360267,myGross:471193,wifeGross:94930,wifeTake:0},{label:'3月',myTake:350183,myGross:457584,wifeGross:100172,wifeTake:0},{label:'4月',myTake:389206,myGross:497261,wifeGross:134860,wifeTake:0},{label:'5月',myTake:360304,myGross:465640,wifeGross:132730,wifeTake:0},{label:'6月',myTake:375863,myGross:487348,wifeGross:110623,wifeTake:0},{label:'夏季賞与',myTake:0,myGross:0,wifeGross:0,wifeTake:0},{label:'7月',myTake:0,myGross:0,wifeGross:0,wifeTake:0},{label:'8月',myTake:0,myGross:0,wifeGross:0,wifeTake:0},{label:'9月',myTake:0,myGross:0,wifeGross:0,wifeTake:0},{label:'10月',myTake:0,myGross:0,wifeGross:0,wifeTake:0},{label:'11月',myTake:0,myGross:0,wifeGross:0,wifeTake:0},{label:'冬季賞与',myTake:0,myGross:0,wifeGross:0,wifeTake:0},{label:'12月',myTake:0,myGross:0,wifeGross:0,wifeTake:0}]}
+};
+const defaultFamily=[{name:'大輔',role:'私',birthday:'',memo:'年収・手取り管理'},{name:'香代ちゃん',role:'妻',birthday:'',memo:'130万・150万・180万ライン確認'},{name:'長女',role:'子ども',birthday:'',memo:'教育費メモ'},{name:'次女',role:'子ども',birthday:'',memo:'教育費メモ'}];
+let data=loadData(), currentYear=String(Math.max(...Object.keys(data).map(Number)));
+function clone(o){return JSON.parse(JSON.stringify(o))}function loadData(){try{return JSON.parse(localStorage.getItem(KEY))||clone(defaultData)}catch(e){return clone(defaultData)}}function saveData(){localStorage.setItem(KEY,JSON.stringify(data))}function yen(n){return (Number(n)||0).toLocaleString('ja-JP')+'円'}function val(n){return Number(n)||0}function setting(){try{return JSON.parse(localStorage.getItem(SETTINGS))||{unit:'yen'}}catch(e){return{unit:'yen'}}}function saveSettings(){localStorage.setItem(SETTINGS,JSON.stringify({unit:document.getElementById('unitMode').value}))}function unitIn(v){let n=Number(v)||0;return document.getElementById('unitMode').value==='man'?Math.round(n*10000):Math.round(n)}function unitOut(v){return document.getElementById('unitMode').value==='man'&&v?Math.round(v/10000):v||''}function emptyYear(){return{months:labels.map(x=>({label:x,myGross:0,myTake:0,wifeGross:0,wifeTake:0}))}}function totals(y){const m=(data[y]||emptyYear()).months;return m.reduce((a,r)=>{a.myGross+=val(r.myGross);a.myTake+=val(r.myTake);a.wifeGross+=val(r.wifeGross);a.wifeTake+=val(r.wifeTake);return a},{myGross:0,myTake:0,wifeGross:0,wifeTake:0})}function inputCount(y){return (data[y]?.months||[]).filter(r=>val(r.myGross)+val(r.myTake)+val(r.wifeGross)+val(r.wifeTake)>0).length}function showTab(t){['home','input','summary','family'].forEach(x=>{document.getElementById(x+'Sec').classList.toggle('hidden',x!==t);document.querySelector(`[data-tab="${x}"]`).classList.toggle('active',x===t)});renderAll()}function changeYear(y){currentYear=String(y);renderAll()}function renderYearSelect(){const sel=document.getElementById('yearSelect');const yrs=Object.keys(data).map(Number).sort((a,b)=>b-a);sel.innerHTML=yrs.map(y=>`<option value="${y}">${y}年</option>`).join('');sel.value=currentYear}function renderDashboard(){const t=totals(currentYear),house=t.myGross+t.wifeGross,take=t.myTake+t.wifeTake,rate=house?Math.round(take/house*1000)/10:0;document.getElementById('dashboardCards').innerHTML=`<div class="kpi primary"><div class="label">世帯年収</div><div class="num">${yen(house)}</div></div><div class="kpi ok"><div class="label">世帯手取り</div><div class="num">${yen(take)}</div></div><div class="kpi"><div class="label">月平均 年収</div><div class="num">${yen(Math.round(house/12))}</div></div><div class="kpi"><div class="label">手取り率</div><div class="num">${rate}%</div></div><div class="kpi wide"><div class="label">${currentYear}年の内訳</div><div class="num">私 ${yen(t.myGross)} ／ 妻 ${yen(t.wifeGross)}</div></div>`;renderWifeLines(t.wifeGross);renderProgress()}function renderWifeLines(w){const box=document.getElementById('wifeStatus');let cls='ok',msg='130万円以内。扶養ラインを意識するなら安全寄り。';if(w>1800000){cls='danger';msg='180万円超。扶養より世帯手取り重視で考えるライン。'}else if(w>1500000){cls='warn';msg='150万円超〜180万円以内。働き損にならないか確認したいライン。'}else if(w>1300000){cls='warn';msg='130万円超〜150万円以内。社会保険・扶養条件の確認ライン。'}box.innerHTML=`<div class="status ${cls}">妻の年収：${yen(w)}<br>${msg}</div>`;document.getElementById('lineRows').innerHTML=[1300000,1500000,1800000].map(l=>{const d=l-w;return `<div class="row"><b>${l/10000}万円ライン</b><span>${d>=0?'あと '+yen(d):yen(Math.abs(d))+' 超過'}</span></div>`}).join('')}function renderProgress(){const c=inputCount(currentYear),pct=Math.round(c/14*100);document.getElementById('inputProgress').innerHTML=`<div class="barrow"><b>${c}/14</b><div class="bar"><div class="fill" style="width:${pct}%"></div></div><span>${pct}%入力</span></div><p class="note">1月〜12月と賞与2回を合わせて14項目です。</p>`}function renderMonths(){const m=data[currentYear]?.months||emptyYear().months;document.getElementById('monthsArea').innerHTML=m.map((r,i)=>{const sum=val(r.myGross)+val(r.wifeGross);return `<details class="month" ${i<6?'open':''}><summary><div class="m-title">${r.label}</div><div class="m-sum">世帯 ${yen(sum)}<br>私 ${yen(r.myGross)} / 妻 ${yen(r.wifeGross)}</div></summary><div class="m-body"><div class="inputgrid"><div><label>私 額面</label><input type="number" inputmode="numeric" value="${unitOut(r.myGross)}" oninput="setMonth(${i},'myGross',this.value)"></div><div><label>私 手取り</label><input type="number" inputmode="numeric" value="${unitOut(r.myTake)}" oninput="setMonth(${i},'myTake',this.value)"></div><div><label>妻 額面</label><input type="number" inputmode="numeric" value="${unitOut(r.wifeGross)}" oninput="setMonth(${i},'wifeGross',this.value)"></div><div><label>妻 手取り</label><input type="number" inputmode="numeric" value="${unitOut(r.wifeTake)}" oninput="setMonth(${i},'wifeTake',this.value)"></div></div></div></details>`}).join('')}function setMonth(i,k,v){if(!data[currentYear])data[currentYear]=emptyYear();data[currentYear].months[i][k]=unitIn(v);saveData();renderDashboard()}function renderSummary(){const years=Object.keys(data).map(Number).sort((a,b)=>b-a);document.getElementById('yearTable').innerHTML=`<thead><tr><th>年</th><th>世帯年収</th><th>世帯手取り</th><th>私額面</th><th>妻額面</th><th>入力</th></tr></thead><tbody>${years.map(y=>{const t=totals(y);return `<tr><td>${y}</td><td>${yen(t.myGross+t.wifeGross)}</td><td>${yen(t.myTake+t.wifeTake)}</td><td>${yen(t.myGross)}</td><td>${yen(t.wifeGross)}</td><td>${inputCount(y)}/14</td></tr>`}).join('')}</tbody>`;const max=Math.max(1,...years.map(y=>{const t=totals(y);return t.myGross+t.wifeGross}));document.getElementById('houseBars').innerHTML=years.slice().reverse().map(y=>{const t=totals(y),v=t.myGross+t.wifeGross,p=Math.round(v/max*100);return `<div class="barrow"><b>${y}</b><div class="bar"><div class="fill" style="width:${p}%"></div></div><span>${yen(v)}</span></div>`}).join('')}function familyData(){try{return JSON.parse(localStorage.getItem(FAMILY))||clone(defaultFamily)}catch(e){return clone(defaultFamily)}}function renderFamily(){const f=familyData();document.getElementById('familyArea').innerHTML=f.map((p,i)=>`<div class="person"><h3>${p.role}</h3><div class="grid"><div><label>名前</label><input id="fname${i}" value="${p.name||''}"></div><div><label>生年月日</label><input id="fbirth${i}" type="date" value="${p.birthday||''}"></div></div><label>メモ</label><textarea id="fmemo${i}">${p.memo||''}</textarea></div>`).join('')}function saveFamilyFromInputs(){const f=defaultFamily.map((p,i)=>({role:p.role,name:document.getElementById('fname'+i).value,birthday:document.getElementById('fbirth'+i).value,memo:document.getElementById('fmemo'+i).value}));localStorage.setItem(FAMILY,JSON.stringify(f));alert('家族情報を保存しました')}function addYear(){const y=prompt('追加する年を入力してください',new Date().getFullYear());if(!y)return;if(!data[y])data[y]=emptyYear();currentYear=String(y);saveData();renderAll()}function clearYear(){if(!confirm(currentYear+'年の入力をクリアしますか？'))return;data[currentYear]=emptyYear();saveData();renderAll()}function exportData(){const text=JSON.stringify({data,family:familyData()},null,2);document.getElementById('backupText').value=text;navigator.clipboard?.writeText(text);alert('バックアップを表示しました。コピーできる端末ではコピーもされています。')}function importData(){try{const obj=JSON.parse(document.getElementById('backupText').value);if(obj.data)data=obj.data;else data=obj;saveData();if(obj.family)localStorage.setItem(FAMILY,JSON.stringify(obj.family));currentYear=String(Math.max(...Object.keys(data).map(Number)));renderAll();alert('読込しました')}catch(e){alert('読込できません。文字を確認してください')}}function renderAll(){document.getElementById('unitMode').value=setting().unit;renderYearSelect();renderDashboard();renderMonths();renderSummary();renderFamily()}if(!localStorage.getItem(KEY)){localStorage.setItem(KEY,JSON.stringify(defaultData))}renderAll();
 </script>
 </body>
 </html>

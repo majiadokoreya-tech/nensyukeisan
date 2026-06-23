@@ -14,7 +14,7 @@
 <body>
 <div class="app">
   <h1>夫婦年収管理アプリ</h1>
-  <div class="sub">毎月入力 → 年間合計・世帯収入・妻の130万/150万/180万ラインを自動計算</div>
+  <div class="sub">スプレッドシートの入力済みデータ入り。毎月入力 → 年間合計・世帯収入・妻の130万/150万/180万ラインを自動計算</div>
 
   <div class="tabs">
     <button id="tabInput" class="tab active" onclick="showTab('input')">毎月入力</button>
@@ -123,7 +123,30 @@ function loadPresetSheetData(){
  Object.entries(data).forEach(([year,d])=>{const months=MONTHS.map((name,i)=>({name,myGross:d.myGross[i]||0,myTake:d.myTake[i]||0,wifeGross:d.wifeGross?d.wifeGross[i]||0:0,wifeTake:0,memo:''}));const t=totals(months);const record={year:Number(year),months,memo:'スプレッドシートから取込',myIncome:t.myGross,myTakeHome:t.myTake,wifeIncome:t.wifeGross,wifeTakeHome:t.wifeTake,updatedAt:new Date().toLocaleString('ja-JP')};const idx=records.findIndex(r=>Number(r.year)===Number(year));if(idx>=0)records[idx]=record;else records.push(record)});
  records.sort((a,b)=>Number(b.year)-Number(a.year));storeRecords(records);renderRecords();alert('2021〜2026年を登録しました')
 }
-el('year').value=new Date().getFullYear();el('year').addEventListener('input',()=>{const r=loadRecords().find(x=>Number(x.year)===currentYear());el('yearMemo').value=r?.memo||'';renderMonths(r?.months||blankMonths())});el('unitMode').addEventListener('change',()=>{const months=getCurrentMonths();renderMonths(months)});el('yearMemo').addEventListener('input',autoSave);const first=loadRecords().find(r=>Number(r.year)===currentYear());el('yearMemo').value=first?.memo||'';renderMonths(first?.months||blankMonths());renderRecords();
+
+function seedPresetSheetDataIfEmpty(){
+ const existing = loadRecords();
+ if(existing.length) return;
+ const data={
+  2021:{myTake:[291015,310306,287407,301692,284738,306270,357674,285370,318498,338023,348612,343772,448849,554055],myGross:[376414,397858,372544,388106,369626,380020,451500,357001,393368,414275,428577,423852,579500,418990]},
+  2022:{myTake:[352157,343502,293889,371343,353024,331408,446347,352023,345314,322040,337628,315582,401188,528358],myGross:[432725,424062,370014,453200,434513,413456,576300,435977,428938,402805,429673,403729,507600,378941]},
+  2023:{myTake:[349124,320545,352998,342054,334431,325275,401564,45981,341492,311071,338475,400920,366058,533667],myGross:[443032,410072,449867,435633,424503,407850,497600,66580,436219,401499,428883,495920,496800,409896]},
+  2024:{myTake:[367132,374506,346986,402243,364520,401207,470446,383728,356626,341831,343830,385773,423297,460117],myGross:[458417,466982,436429,495893,456353,464539,574300,454701,427033,411746,422278,464515,538100,434424]},
+  2025:{myTake:[396970,387587,371574,435085,416550,400795,391386,389586,418833,331168,375151,375512,382967,613537],myGross:[488606,480444,461306,531282,510482,506405,531000,492067,524351,426579,487014,488714,519500,420971],wifeGross:[101420,113540,99065,89360,108190,118935,0,127690,128860,103130,111450,120540,0,59510]},
+  2026:{myTake:[362636,360267,350183,389206,360304,375863,0,0,0,0,0,0,0,0],myGross:[471775,471193,457584,497261,465640,487348,0,0,0,0,0,0,0,0],wifeGross:[102210,94930,100172,134860,132730,110623,0,0,0,0,0,0,0,0]}
+ };
+ const records=[];
+ Object.entries(data).forEach(([year,d])=>{
+   const months=MONTHS.map((name,i)=>({name,myGross:d.myGross[i]||0,myTake:d.myTake[i]||0,wifeGross:d.wifeGross?d.wifeGross[i]||0:0,wifeTake:0,memo:''}));
+   const t=totals(months);
+   records.push({year:Number(year),months,memo:'スプレッドシートから自動入力済み',myIncome:t.myGross,myTakeHome:t.myTake,wifeIncome:t.wifeGross,wifeTakeHome:t.wifeTake,updatedAt:new Date().toLocaleString('ja-JP')});
+ });
+ records.sort((a,b)=>Number(b.year)-Number(a.year));
+ storeRecords(records);
+}
+
+seedPresetSheetDataIfEmpty();
+el('year').value=2026;el('year').addEventListener('input',()=>{const r=loadRecords().find(x=>Number(x.year)===currentYear());el('yearMemo').value=r?.memo||'';renderMonths(r?.months||blankMonths())});el('unitMode').addEventListener('change',()=>{const months=getCurrentMonths();renderMonths(months)});el('yearMemo').addEventListener('input',autoSave);const first=loadRecords().find(r=>Number(r.year)===currentYear());el('yearMemo').value=first?.memo||'';renderMonths(first?.months||blankMonths());renderRecords();
 </script>
 </body>
 </html>

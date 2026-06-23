@@ -1,301 +1,508 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>せどり利益計算機 (ライト)</title>
-<style>
-
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap');
-  :root {
-    --bg: #f5f5f0;
-    --surface: #ffffff;
-    --surface2: #f0f0eb;
-    --border: #e0e0d8;
-    --accent: #16a34a;
-    --red: #dc2626;
-    --text: #1a1a1a;
-    --muted: #888;
-    --sans: 'Noto Sans JP', sans-serif;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; padding: 0 0 40px; }
-  header { background: var(--accent); padding: 16px 20px; display: flex; align-items: baseline; gap: 10px; position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-  header h1 { font-size: 1rem; font-weight: 900; color: #fff; letter-spacing: 0.05em; }
-  header span { font-size: 0.72rem; color: rgba(255,255,255,0.75); }
-  .container { padding: 16px; max-width: 480px; margin: 0 auto; }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-  .card-title { font-size: 0.68rem; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; margin-bottom: 14px; font-weight: 700; }
-  .field { margin-bottom: 14px; }
-  .field:last-child { margin-bottom: 0; }
-  .field label { display: block; font-size: 0.82rem; color: #555; margin-bottom: 6px; font-weight: 700; }
-  .input-wrap { position: relative; display: flex; align-items: center; }
-  .input-wrap .unit { position: absolute; right: 14px; font-size: 0.9rem; color: var(--muted); pointer-events: none; }
-  input[type="number"] { width: 100%; background: var(--surface2); border: 2px solid var(--border); border-radius: 8px; padding: 13px 40px 13px 16px; font-size: 1.3rem; font-family: var(--sans); color: var(--text); outline: none; transition: border-color 0.15s; -webkit-appearance: none; appearance: none; font-weight: 700; }
-  input[type="number"]:focus { border-color: var(--accent); background: #fff; }
-  input[type="number"]::placeholder { color: #ccc; font-weight: 400; }
-  .fee-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #f0fdf4; border-radius: 8px; border: 1px solid #bbf7d0; margin-bottom: 10px; }
-  .fee-label { font-size: 0.82rem; color: #166534; font-weight: 700; }
-  .fee-val { font-size: 0.95rem; color: #15803d; font-weight: 900; }
-  .divider { height: 1px; background: var(--border); margin: 14px 0; }
-  .result-card { background: var(--surface); border: 2px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 12px; transition: border-color 0.3s; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-  .result-card.profit { border-color: var(--accent); background: #f0fdf4; }
-  .result-card.loss   { border-color: var(--red); background: #fef2f2; }
-  .result-main { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 16px; }
-  .result-label { font-size: 0.68rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; display: block; margin-bottom: 4px; font-weight: 700; }
-  .result-amount { font-size: 2.8rem; font-weight: 900; line-height: 1; color: #ccc; transition: color 0.3s; }
-  .result-amount.profit { color: var(--accent); }
-  .result-amount.loss   { color: var(--red); }
-  .result-margin { text-align: right; }
-  .margin-num { font-size: 2rem; font-weight: 900; color: #ccc; transition: color 0.3s; }
-  .margin-num.profit { color: var(--accent); }
-  .margin-num.loss   { color: var(--red); }
-  .breakdown { display: flex; flex-direction: column; gap: 0; }
-  .breakdown-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; padding: 7px 0; border-bottom: 1px solid var(--border); }
-  .breakdown-row:last-child { border-bottom: none; }
-  .breakdown-row .bk-label { color: #666; }
-  .breakdown-row .bk-val { font-weight: 700; }
-  .breakdown-row .bk-val.neg { color: var(--red); }
-  .breakdown-row .bk-val.pos { color: var(--text); }
-  .verdict { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 50px; font-size: 0.9rem; font-weight: 900; margin-top: 14px; transition: all 0.3s; }
-  .verdict.buy     { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
-  .verdict.pass    { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
-  .verdict.neutral { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
-  .roi-bar-wrap { margin-top: 14px; }
-  .roi-bar-label { font-size: 0.68rem; color: var(--muted); margin-bottom: 6px; font-weight: 700; }
-  .roi-bar-track { height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; border: 1px solid var(--border); }
-  .roi-bar-fill { height: 100%; border-radius: 4px; width: 0%; transition: width 0.4s cubic-bezier(.22,.68,0,1.2), background 0.3s; }
-  .btn-clear { width: 100%; padding: 14px; background: #fff; border: 2px solid var(--border); border-radius: 8px; color: #888; font-family: var(--sans); font-size: 0.9rem; cursor: pointer; transition: all 0.15s; font-weight: 700; }
-  .btn-clear:active { background: var(--surface2); }
-  .guide { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-  .guide-title { font-size: 0.68rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 10px; font-weight: 700; }
-  .guide-row { display: flex; justify-content: space-between; font-size: 0.82rem; padding: 6px 0; border-bottom: 1px solid var(--border); color: #666; }
-  .guide-row:last-child { border-bottom: none; }
-  .guide-row span { font-weight: 700; color: var(--text); }
-  .preset-btns { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
-  .preset-btn { padding: 6px 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; color: #666; font-size: 0.75rem; cursor: pointer; transition: all 0.15s; white-space: nowrap; font-weight: 700; }
-  .preset-btn:active, .preset-btn.active { background: #dcfce7; border-color: var(--accent); color: var(--accent); }
-
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>夫婦年収管理アプリ</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --main: #2563eb;
+      --main-dark: #1d4ed8;
+      --danger: #dc2626;
+      --warn: #f59e0b;
+      --ok: #16a34a;
+      --border: #e5e7eb;
+      --soft: #f9fafb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 14px;
+    }
+    .app { max-width: 860px; margin: 0 auto; }
+    h1 { font-size: 24px; margin: 8px 0 4px; }
+    h2 { font-size: 20px; margin: 0 0 12px; }
+    h3 { font-size: 16px; margin: 14px 0 8px; }
+    .sub { color: var(--muted); font-size: 14px; margin-bottom: 16px; line-height: 1.5; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.04);
+    }
+    label { display: block; font-weight: 700; margin: 12px 0 6px; }
+    input, textarea, select {
+      width: 100%;
+      font-size: 18px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+    }
+    textarea { min-height: 86px; resize: vertical; font-size: 15px; line-height: 1.45; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    @media (min-width: 650px) { .grid { grid-template-columns: 1fr 1fr; } }
+    .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (min-width: 760px) { .result-grid { grid-template-columns: repeat(4, 1fr); } }
+    .result {
+      background: var(--soft);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      min-height: 76px;
+    }
+    .result .title { font-size: 13px; color: var(--muted); }
+    .result .num { font-size: 20px; font-weight: 800; margin-top: 4px; word-break: keep-all; }
+    .status {
+      border-radius: 14px;
+      padding: 12px;
+      font-weight: 800;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+    .ok { background: #dcfce7; color: #14532d; }
+    .warn { background: #fef3c7; color: #78350f; }
+    .danger { background: #fee2e2; color: #7f1d1d; }
+    .info { background: #dbeafe; color: #1e3a8a; }
+    .line-list { display: grid; gap: 8px; margin-top: 12px; }
+    .line-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+      font-size: 15px;
+    }
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+    .btns3 { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
+    @media (min-width: 650px) { .btns3 { grid-template-columns: 1fr 1fr 1fr; } }
+    .primary { background: var(--main); color: white; }
+    .primary:active { background: var(--main-dark); }
+    .gray { background: #e5e7eb; color: #111827; }
+    .red { background: #fee2e2; color: #991b1b; }
+    .green { background: #dcfce7; color: #14532d; }
+    .orange { background: #ffedd5; color: #9a3412; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 10px 6px; border-bottom: 1px solid var(--border); text-align: right; vertical-align: top; }
+    th:first-child, td:first-child { text-align: left; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 14px; }
+    .table-wrap table { min-width: 760px; }
+    .actions { display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap; }
+    .mini { padding: 7px 9px; font-size: 13px; border-radius: 9px; }
+    .empty { color: var(--muted); text-align: center; padding: 14px; }
+    .note { font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .pill { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 12px; font-weight: 800; }
+    .pill.ok { background: #dcfce7; color: #14532d; }
+    .pill.warn { background: #fef3c7; color: #78350f; }
+    .pill.danger { background: #fee2e2; color: #7f1d1d; }
+    .small { font-size: 12px; color: var(--muted); }
+  </style>
 </head>
 <body>
+  <div class="app">
+    <h1>夫婦年収管理アプリ</h1>
+    <div class="sub">年収・手取り・世帯年収・妻の130万/150万/180万ラインを管理。Googleスプレッドシート貼り付け取込にも対応。</div>
 
-<header>
-  <h1>せどり利益計算機</h1>
-  <span>メルカリ対応</span>
-</header>
+    <div class="card">
+      <h2>入力</h2>
+      <div class="grid">
+        <div>
+          <label for="year">年</label>
+          <input id="year" type="number" inputmode="numeric" />
+        </div>
+        <div>
+          <label for="myIncome">私の年収（税込）</label>
+          <input id="myIncome" type="number" inputmode="numeric" placeholder="例：5000000" />
+        </div>
+        <div>
+          <label for="wifeIncome">妻の年収（税込）</label>
+          <input id="wifeIncome" type="number" inputmode="numeric" placeholder="例：1300000" />
+        </div>
+        <div>
+          <label for="myTakeHome">私の手取り</label>
+          <input id="myTakeHome" type="number" inputmode="numeric" placeholder="例：4000000" />
+        </div>
+        <div>
+          <label for="wifeTakeHome">妻の手取り</label>
+          <input id="wifeTakeHome" type="number" inputmode="numeric" placeholder="例：1100000" />
+        </div>
+      </div>
+      <label for="memo">メモ</label>
+      <textarea id="memo" placeholder="例：妻は130万円以内予定、来年は180万円を目標など"></textarea>
 
-<div class="container">
-
-  <div class="card">
-    <div class="card-title">入力</div>
-
-    <div class="field">
-      <label>仕入れ値</label>
-      <div class="input-wrap">
-        <input type="number" id="costInput" placeholder="0" inputmode="numeric" min="0" oninput="calc()">
-        <span class="unit">円</span>
+      <div class="btns">
+        <button class="primary" onclick="saveRecord()">保存する</button>
+        <button class="gray" onclick="clearForm()">入力クリア</button>
       </div>
     </div>
 
-    <div class="field">
-      <label>売値（メルカリ出品価格）</label>
-      <div class="input-wrap">
-        <input type="number" id="priceInput" placeholder="0" inputmode="numeric" min="0" oninput="calc()">
-        <span class="unit">円</span>
+    <div class="card">
+      <h2>自動計算</h2>
+      <div class="result-grid">
+        <div class="result"><div class="title">世帯年収</div><div class="num" id="householdIncome">0円</div></div>
+        <div class="result"><div class="title">月収換算（税込）</div><div class="num" id="monthlyIncome">0円</div></div>
+        <div class="result"><div class="title">世帯手取り</div><div class="num" id="householdTakeHome">0円</div></div>
+        <div class="result"><div class="title">月手取り換算</div><div class="num" id="monthlyTakeHome">0円</div></div>
       </div>
+      <div id="wifeStatus" class="status info">妻の年収を入力してください</div>
+      <div class="line-list" id="lineList"></div>
+      <p class="note">※税金・社会保険・扶養判定は家庭状況や勤務先で変わるため、このアプリは目安管理用です。</p>
     </div>
 
-    <div class="divider"></div>
-
-    <div class="fee-row">
-      <span class="fee-label">メルカリ手数料（自動計算）</span>
-      <span class="fee-val" id="mercariFeeTxt">—</span>
+    <div class="card">
+      <h2>スプレッドシート取込</h2>
+      <p class="note">Googleスプレッドシートを範囲選択してコピーし、下に貼り付けてください。今回の「年間収入」形式なら、私の額面・手取り、妻の額面を年ごとに自動登録します。</p>
+      <textarea id="sheetPaste" placeholder="スプレッドシートをコピーしてここに貼り付け"></textarea>
+      <div class="btns3">
+        <button class="primary" onclick="importSheetPaste()">貼り付け内容を取込</button>
+        <button class="green" onclick="loadSampleSheetData()">今回の入力済みデータを入れる</button>
+        <button class="gray" onclick="document.getElementById('sheetPaste').value=''">貼り付け欄クリア</button>
+      </div>
+      <div id="importResult" class="status info" style="display:none;"></div>
     </div>
 
-    <div class="field">
-      <label>送料</label>
-      <div class="input-wrap">
-        <input type="number" id="shippingInput" placeholder="0" inputmode="numeric" min="0" oninput="calc()">
-        <span class="unit">円</span>
+    <div class="card">
+      <h2>年ごとの記録</h2>
+      <div id="recordsArea"></div>
+      <div class="btns">
+        <button class="gray" onclick="exportData()">バックアップ出力</button>
+        <button class="red" onclick="deleteAll()">全削除</button>
       </div>
-      <div class="preset-btns">
-        <button class="preset-btn" onclick="setShipping(210, this)">ネコポス 210</button>
-        <button class="preset-btn" onclick="setShipping(380, this)">宅急便コンパクト 380</button>
-        <button class="preset-btn" onclick="setShipping(750, this)">宅急便(60) 750</button>
-        <button class="preset-btn" onclick="setShipping(200, this)">ゆうパケット 200</button>
-        <button class="preset-btn" onclick="setShipping(180, this)">ゆうパケポストmini 180</button>
-        <button class="preset-btn" onclick="setShipping(0, this)">送料込み 0</button>
-      </div>
-    </div>
-
-    <div class="field">
-      <label>その他費用（梱包材など）</label>
-      <div class="input-wrap">
-        <input type="number" id="otherInput" placeholder="0" inputmode="numeric" min="0" oninput="calc()">
-        <span class="unit">円</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="result-card" id="resultCard">
-    <div class="result-main">
-      <div>
-        <span class="result-label">純利益</span>
-        <div class="result-amount" id="profitAmt">——</div>
-      </div>
-      <div class="result-margin">
-        <span class="result-label" style="text-align:right; display:block;">利益率</span>
-        <div class="margin-num" id="marginNum">——</div>
-      </div>
-    </div>
-
-    <div class="breakdown" id="breakdown">
-      <div class="breakdown-row">
-        <span class="bk-label">売上</span>
-        <span class="bk-val pos" id="bkPrice">—</span>
-      </div>
-      <div class="breakdown-row">
-        <span class="bk-label">メルカリ手数料 (10%)</span>
-        <span class="bk-val neg" id="bkFee">—</span>
-      </div>
-      <div class="breakdown-row">
-        <span class="bk-label">送料</span>
-        <span class="bk-val neg" id="bkShip">—</span>
-      </div>
-      <div class="breakdown-row">
-        <span class="bk-label">仕入れ値</span>
-        <span class="bk-val neg" id="bkCost">—</span>
-      </div>
-      <div class="breakdown-row" id="bkOtherRow" style="display:none">
-        <span class="bk-label">その他</span>
-        <span class="bk-val neg" id="bkOther">—</span>
-      </div>
-    </div>
-
-    <div id="roiBarWrap" class="roi-bar-wrap" style="display:none">
-      <div class="roi-bar-label">利益率バー</div>
-      <div class="roi-bar-track"><div class="roi-bar-fill" id="roiFill"></div></div>
-    </div>
-
-    <div id="verdictWrap">
-      <span class="verdict neutral" id="verdict">数値を入力してください</span>
+      <label for="importText">バックアップ読込</label>
+      <textarea id="importText" placeholder="バックアップ出力した文字を貼り付け"></textarea>
+      <button class="primary" style="width:100%; margin-top:8px;" onclick="importData()">読込する</button>
     </div>
   </div>
 
-  <div class="guide">
-    <div class="guide-title">らくらくメルカリ便 送料目安</div>
-    <div class="guide-row">ネコポス（3辺60cm以内・1kg以内）<span>210円</span></div>
-    <div class="guide-row">宅急便コンパクト<span>380円</span></div>
-    <div class="guide-row">宅急便 60サイズ<span>750円</span></div>
-    <div class="guide-row">宅急便 80サイズ<span>850円</span></div>
-    <div class="guide-row">宅急便 100サイズ<span>1,050円</span></div>
-    <div class="guide-row">ゆうパケット（3cm以内）<span>200円</span></div>
-    <div class="guide-row">ゆうパケットポスト<span>230円</span></div>
-    <div class="guide-row">ゆうパケットポストmini（封筒代20円込み）<span>180円</span></div>
-  </div>
+  <script>
+    const KEY = 'fuufu_income_manager_records_v2';
+    const OLD_KEY = 'fuufu_income_manager_records_v1';
 
-  <button class="btn-clear" onclick="clearAll()">↺ リセット</button>
+    const SAMPLE_SHEET_TEXT = `,Unnamed: 0,2021,Unnamed: 2,2022,Unnamed: 4,2023,Unnamed: 6,2024,Unnamed: 8,2025,Unnamed: 10,2026,Unnamed: 12
+0,,手取り,額面,手取り,額面,手取り,額面,手取り,額面,手取り,額面,手取り,額面
+1,1月,291015,376414,352157,432725,349124,443032,367132,458417,396970,488606,362636,471775
+2,2月,310306,397858,343502,424062,320545,410072,374506,466982,387587,480444,360267,471193
+3,3月,287407,372544,293889,370014,352998,449867,346986,436429,371574,461306,350183,457584
+4,4月,301692,388106,371343,453200,342054,435633,402243,495893,435085,531282,389206,497261
+5,5月,284738,369626,353024,434513,334431,424503,364520,456353,416550,510482,360304,465640
+6,6月,306270,380020,331408,413456,325275,407850,401207,464539,400795,506405,375863,487348
+7,夏季賞与,357674,451500,446347,576300,401564,497600,470446,574300,391386,531000,,
+8,7月,285370,357001,352023,435977,45981,66580,383728,454701,389586,492067,,
+9,8月,318498,393368,345314,428938,341492,436219,356626,427033,418833,524351,,
+10,9月,338023,414275,322040,402805,311071,401499,341831,411746,331168,426579,,
+11,10月,348612,428577,337628,429673,338475,428883,343830,422278,375151,487014,,
+12,11月,343772,423852,315582,403729,400920,495920,385773,464515,375512,488714,,
+13,冬季賞与,448849,579500,401188,507600,366058,496800,423297,538100,382967,519500,,
+14,12月,554055,418990,528358,378941,533667,409896,460117,434424,613537,420971,,
+15,合計,4776281,5751631,5093803,6091933,4763655,5804354,5422242,6505710,5686701,6868721,2198459,2850801
+16,,,,,,,,,,,,,
+17,香代ちゃん,,,,,,,,,,額面,,額面
+18,１月,,,,,,,,,,101420,,102210
+19,２月,,,,,,,,,,113540,,94930
+20,3月,,,,,,,,,,99065,,100172
+21,4月,,,,,,,,,,89360,,134860
+22,5月,,,,,,,,,,108190,,132730
+23,6月,,,,,,,,,,118935,,110623
+24,7月,,,,,,,,,,127690,,
+25,8月,,,,,,,,,,128860,,
+26,9月,,,,,,,,,,103130,,
+27,10月,,,,,,,,,,111450,,
+28,11月,,,,,,,,,,120540,,
+29,12月,,,,,,,,,,59510,,
+30,合計,,,,,,,,,,1281690,,675525
+31,,,,,,,,,,,-18310,,-624475`;
 
-</div>
+    const yen = n => (Number(n) || 0).toLocaleString('ja-JP') + '円';
+    const getVal = id => Number(document.getElementById(id).value) || 0;
+    const parseNum = v => {
+      if (v === undefined || v === null) return 0;
+      const s = String(v).replace(/[\,\n\r¥￥円\s]/g, '').replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
+      const n = Number(s);
+      return Number.isFinite(n) ? n : 0;
+    };
 
+    function loadRecords() {
+      try {
+        const current = JSON.parse(localStorage.getItem(KEY));
+        if (Array.isArray(current)) return current;
+        const old = JSON.parse(localStorage.getItem(OLD_KEY));
+        if (Array.isArray(old)) {
+          localStorage.setItem(KEY, JSON.stringify(old));
+          return old;
+        }
+        return [];
+      } catch { return []; }
+    }
+    function storeRecords(records) {
+      localStorage.setItem(KEY, JSON.stringify(records));
+    }
+    function setDefaultYear() {
+      document.getElementById('year').value = new Date().getFullYear();
+    }
+    function calc() {
+      const myIncome = getVal('myIncome');
+      const wifeIncome = getVal('wifeIncome');
+      const myTakeHome = getVal('myTakeHome');
+      const wifeTakeHome = getVal('wifeTakeHome');
+      const household = myIncome + wifeIncome;
+      const takeHome = myTakeHome + wifeTakeHome;
+      document.getElementById('householdIncome').textContent = yen(household);
+      document.getElementById('monthlyIncome').textContent = yen(Math.round(household / 12));
+      document.getElementById('householdTakeHome').textContent = yen(takeHome);
+      document.getElementById('monthlyTakeHome').textContent = yen(Math.round(takeHome / 12));
+      updateWifeStatus(wifeIncome, document.getElementById('wifeIncome').value.trim() !== '');
+    }
+    function updateWifeStatus(wifeIncome, hasInput) {
+      const box = document.getElementById('wifeStatus');
+      box.className = 'status';
+      if (!hasInput) {
+        box.classList.add('info');
+        box.textContent = '妻の年収を入力してください';
+      } else if (wifeIncome <= 1300000) {
+        box.classList.add('ok');
+        box.textContent = '妻の年収：130万円以内です。扶養ラインを意識するなら安全寄り。';
+      } else if (wifeIncome <= 1500000) {
+        box.classList.add('warn');
+        box.textContent = '妻の年収：130万円超〜150万円以内です。社会保険や扶養の確認が必要。';
+      } else if (wifeIncome <= 1800000) {
+        box.classList.add('warn');
+        box.textContent = '妻の年収：150万円超〜180万円以内です。働き損にならないか確認したいライン。';
+      } else {
+        box.classList.add('danger');
+        box.textContent = '妻の年収：180万円超です。扶養より世帯手取り重視で考えるライン。';
+      }
+      const lines = [1300000, 1500000, 1800000];
+      document.getElementById('lineList').innerHTML = lines.map(line => {
+        const diff = line - wifeIncome;
+        const text = diff >= 0 ? `あと ${yen(diff)}` : `${yen(Math.abs(diff))} 超過`;
+        return `<div class="line-item"><strong>${(line/10000).toLocaleString()}万円ライン</strong><span>${text}</span></div>`;
+      }).join('');
+    }
+    function makeRecord({ year, myIncome = 0, wifeIncome = 0, myTakeHome = 0, wifeTakeHome = 0, memo = '' }) {
+      return {
+        year: Number(year),
+        myIncome: Number(myIncome) || 0,
+        wifeIncome: Number(wifeIncome) || 0,
+        myTakeHome: Number(myTakeHome) || 0,
+        wifeTakeHome: Number(wifeTakeHome) || 0,
+        memo,
+        updatedAt: new Date().toLocaleString('ja-JP')
+      };
+    }
+    function upsertRecords(newRecords) {
+      let records = loadRecords();
+      newRecords.forEach(record => {
+        const idx = records.findIndex(r => Number(r.year) === Number(record.year));
+        if (idx >= 0) records[idx] = { ...records[idx], ...record, updatedAt: new Date().toLocaleString('ja-JP') };
+        else records.push(record);
+      });
+      records.sort((a,b) => Number(b.year) - Number(a.year));
+      storeRecords(records);
+      renderRecords();
+      return records;
+    }
+    function saveRecord() {
+      const year = getVal('year');
+      if (!year) return alert('年を入力してください');
+      const record = makeRecord({
+        year,
+        myIncome: getVal('myIncome'),
+        wifeIncome: getVal('wifeIncome'),
+        myTakeHome: getVal('myTakeHome'),
+        wifeTakeHome: getVal('wifeTakeHome'),
+        memo: document.getElementById('memo').value.trim()
+      });
+      upsertRecords([record]);
+      alert('保存しました');
+    }
+    function editRecord(year) {
+      const r = loadRecords().find(x => Number(x.year) === Number(year));
+      if (!r) return;
+      document.getElementById('year').value = r.year;
+      document.getElementById('myIncome').value = r.myIncome || '';
+      document.getElementById('wifeIncome').value = r.wifeIncome || '';
+      document.getElementById('myTakeHome').value = r.myTakeHome || '';
+      document.getElementById('wifeTakeHome').value = r.wifeTakeHome || '';
+      document.getElementById('memo').value = r.memo || '';
+      calc();
+      scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function deleteRecord(year) {
+      if (!confirm(year + '年の記録を削除しますか？')) return;
+      storeRecords(loadRecords().filter(r => Number(r.year) !== Number(year)));
+      renderRecords();
+    }
+    function lineClass(wifeIncome) {
+      if (!wifeIncome) return 'ok';
+      if (wifeIncome <= 1300000) return 'ok';
+      if (wifeIncome <= 1800000) return 'warn';
+      return 'danger';
+    }
+    function renderRecords() {
+      const records = loadRecords();
+      const area = document.getElementById('recordsArea');
+      if (!records.length) {
+        area.innerHTML = '<div class="empty">まだ記録がありません</div>';
+        return;
+      }
+      area.innerHTML = `<div class="table-wrap"><table>
+        <thead><tr><th>年</th><th>私 額面</th><th>私 手取り</th><th>妻 額面</th><th>妻 手取り</th><th>世帯年収</th><th>月収換算</th><th>妻ライン</th><th>操作</th></tr></thead>
+        <tbody>${records.map(r => {
+          const household = (Number(r.myIncome)||0) + (Number(r.wifeIncome)||0);
+          const cls = lineClass(Number(r.wifeIncome)||0);
+          const label = !r.wifeIncome ? '未入力' : (r.wifeIncome <= 1300000 ? '130万以内' : (r.wifeIncome <= 1500000 ? '150万以内' : (r.wifeIncome <= 1800000 ? '180万以内' : '180万超')));
+          return `<tr>
+            <td><strong>${r.year}</strong><div class="small">${r.memo ? escapeHtml(r.memo) : ''}</div></td>
+            <td>${yen(r.myIncome)}</td>
+            <td>${yen(r.myTakeHome)}</td>
+            <td>${yen(r.wifeIncome)}</td>
+            <td>${yen(r.wifeTakeHome)}</td>
+            <td><strong>${yen(household)}</strong></td>
+            <td>${yen(Math.round(household / 12))}</td>
+            <td><span class="pill ${cls}">${label}</span></td>
+            <td><div class="actions"><button class="mini gray" onclick="editRecord(${r.year})">編集</button><button class="mini red" onclick="deleteRecord(${r.year})">削除</button></div></td>
+          </tr>`;
+        }).join('')}</tbody></table></div>`;
+    }
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>'"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[c]));
+    }
+    function clearForm() {
+      ['myIncome','wifeIncome','myTakeHome','wifeTakeHome','memo'].forEach(id => document.getElementById(id).value = '');
+      setDefaultYear();
+      calc();
+    }
+    function deleteAll() {
+      if (!confirm('すべての記録を削除しますか？')) return;
+      localStorage.removeItem(KEY);
+      localStorage.removeItem(OLD_KEY);
+      renderRecords();
+      clearForm();
+    }
+    async function exportData() {
+      const text = JSON.stringify(loadRecords(), null, 2);
+      document.getElementById('importText').value = text;
+      try {
+        await navigator.clipboard.writeText(text);
+        alert('バックアップをコピーしました。貼り付け欄にも表示しました。');
+      } catch {
+        alert('貼り付け欄にバックアップを表示しました。必要なら手動でコピーしてください。');
+      }
+    }
+    function importData() {
+      try {
+        const data = JSON.parse(document.getElementById('importText').value);
+        if (!Array.isArray(data)) throw new Error('形式エラー');
+        const clean = data.filter(r => r && r.year).map(r => makeRecord(r));
+        storeRecords(clean.sort((a,b) => Number(b.year) - Number(a.year)));
+        renderRecords();
+        alert('読込しました');
+      } catch(e) {
+        alert('読込できません。バックアップ文字を確認してください。');
+      }
+    }
 
-<script>
-function fmt(n) { return n.toLocaleString('ja-JP') + '円'; }
+    function splitRows(text) {
+      return String(text || '').trim().split(/\r?\n/).map(line => {
+        if (line.includes('\t')) return line.split('\t');
+        return line.split(',');
+      });
+    }
+    function findYearColumns(headerRow, secondRow) {
+      const result = {};
+      headerRow.forEach((cell, i) => {
+        const y = parseNum(cell);
+        if (y >= 2000 && y <= 2100) {
+          const a = String(secondRow[i] || '');
+          const b = String(secondRow[i + 1] || '');
+          let takeHomeCol = i;
+          let grossCol = i + 1;
+          if (a.includes('額面') && b.includes('手取り')) {
+            grossCol = i;
+            takeHomeCol = i + 1;
+          }
+          result[y] = { takeHomeCol, grossCol };
+        }
+      });
+      return result;
+    }
+    function importSheetPaste() {
+      const text = document.getElementById('sheetPaste').value;
+      const parsed = parseAnnualIncomeSheet(text);
+      if (!parsed.length) {
+        showImportResult('取込できませんでした。スプレッドシートの範囲を広めにコピーして貼り付けてください。', 'danger');
+        return;
+      }
+      upsertRecords(parsed);
+      showImportResult(`${parsed.length}年分を取込しました：${parsed.map(r => r.year + '年').join('、')}`, 'ok');
+    }
+    function loadSampleSheetData() {
+      document.getElementById('sheetPaste').value = SAMPLE_SHEET_TEXT;
+      importSheetPaste();
+    }
+    function parseAnnualIncomeSheet(text) {
+      const rows = splitRows(text);
+      if (rows.length < 3) return [];
+      let headerIdx = rows.findIndex(row => row.some(c => parseNum(c) >= 2000 && parseNum(c) <= 2100));
+      if (headerIdx < 0 || headerIdx + 1 >= rows.length) return [];
+      const header = rows[headerIdx];
+      const second = rows[headerIdx + 1] || [];
+      const yearCols = findYearColumns(header, second);
+      const totalRows = rows.filter(row => String(row[1] || row[0] || '').includes('合計'));
+      const myTotalRow = totalRows[0];
+      const wifeTotalRow = totalRows[1];
+      if (!myTotalRow) return [];
+      return Object.keys(yearCols).map(y => {
+        const cols = yearCols[y];
+        const year = Number(y);
+        const myTakeHome = parseNum(myTotalRow[cols.takeHomeCol]);
+        const myIncome = parseNum(myTotalRow[cols.grossCol]);
+        let wifeIncome = 0;
+        if (wifeTotalRow) {
+          wifeIncome = parseNum(wifeTotalRow[cols.grossCol]) || parseNum(wifeTotalRow[cols.takeHomeCol]);
+        }
+        return makeRecord({
+          year,
+          myIncome,
+          myTakeHome,
+          wifeIncome,
+          wifeTakeHome: 0,
+          memo: 'スプレッドシートから取込'
+        });
+      }).filter(r => r.myIncome || r.myTakeHome || r.wifeIncome);
+    }
+    function showImportResult(message, type) {
+      const box = document.getElementById('importResult');
+      box.style.display = 'block';
+      box.className = 'status ' + type;
+      box.textContent = message;
+    }
 
-function calc() {
-  const price    = parseInt(document.getElementById('priceInput').value)    || 0;
-  const cost     = parseInt(document.getElementById('costInput').value)     || 0;
-  const shipping = parseInt(document.getElementById('shippingInput').value) || 0;
-  const other    = parseInt(document.getElementById('otherInput').value)    || 0;
-
-  const fee = Math.floor(price * 0.1);
-  document.getElementById('mercariFeeTxt').textContent = price > 0 ? fmt(fee) : '—';
-
-  if (price === 0 && cost === 0) { resetDisplay(); return; }
-
-  const profit = price - fee - shipping - cost - other;
-  const margin = price > 0 ? (profit / price * 100) : 0;
-
-  const profitEl = document.getElementById('profitAmt');
-  const marginEl = document.getElementById('marginNum');
-  const cardEl   = document.getElementById('resultCard');
-
-  profitEl.textContent = (profit > 0 ? '+' : '') + fmt(profit);
-  marginEl.textContent = margin.toFixed(1) + '%';
-
-  profitEl.className = 'result-amount ' + (profit > 0 ? 'profit' : profit < 0 ? 'loss' : '');
-  marginEl.className = 'margin-num '    + (profit > 0 ? 'profit' : profit < 0 ? 'loss' : '');
-  cardEl.className   = 'result-card '  + (profit > 0 ? 'profit' : profit < 0 ? 'loss' : '');
-
-  document.getElementById('bkPrice').textContent = fmt(price);
-  document.getElementById('bkFee').textContent   = '−' + fmt(fee);
-  document.getElementById('bkShip').textContent  = '−' + fmt(shipping);
-  document.getElementById('bkCost').textContent  = '−' + fmt(cost);
-
-  if (other > 0) {
-    document.getElementById('bkOtherRow').style.display = 'flex';
-    document.getElementById('bkOther').textContent = '−' + fmt(other);
-  } else {
-    document.getElementById('bkOtherRow').style.display = 'none';
-  }
-
-  document.getElementById('roiBarWrap').style.display = 'block';
-  const fillPct = Math.min(Math.max(margin, 0), 50) / 50 * 100;
-  const fill = document.getElementById('roiFill');
-  fill.style.width = fillPct + '%';
-  fill.style.background = profit > 0
-    ? 'linear-gradient(90deg, #22c55e, #16a34a)'
-    : 'linear-gradient(90deg, #ef4444, #dc2626)';
-
-  const v = document.getElementById('verdict');
-  if (profit <= 0) {
-    v.textContent = '✗ 赤字・見送り';
-    v.className = 'verdict pass';
-  } else if (margin >= 20) {
-    v.textContent = '◎ 優良案件！ 仕入れGO';
-    v.className = 'verdict buy';
-  } else if (margin >= 10) {
-    v.textContent = '○ 利益あり・仕入れOK';
-    v.className = 'verdict buy';
-  } else {
-    v.textContent = '△ 利益薄め・要検討';
-    v.className = 'verdict neutral';
-  }
-}
-
-function setShipping(val, el) {
-  document.getElementById('shippingInput').value = val;
-  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  calc();
-}
-
-function resetDisplay() {
-  document.getElementById('profitAmt').textContent = '——';
-  document.getElementById('profitAmt').className = 'result-amount';
-  document.getElementById('marginNum').textContent = '——';
-  document.getElementById('marginNum').className = 'margin-num';
-  document.getElementById('resultCard').className = 'result-card';
-  document.getElementById('bkPrice').textContent = '—';
-  document.getElementById('bkFee').textContent   = '—';
-  document.getElementById('bkShip').textContent  = '—';
-  document.getElementById('bkCost').textContent  = '—';
-  document.getElementById('bkOtherRow').style.display = 'none';
-  document.getElementById('roiBarWrap').style.display = 'none';
-  document.getElementById('verdict').textContent = '数値を入力してください';
-  document.getElementById('verdict').className = 'verdict neutral';
-}
-
-function clearAll() {
-  ['costInput','priceInput','shippingInput','otherInput'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
-  document.getElementById('mercariFeeTxt').textContent = '—';
-  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-  resetDisplay();
-}
-</script>
-
+    ['year','myIncome','wifeIncome','myTakeHome','wifeTakeHome','memo'].forEach(id => {
+      document.addEventListener('input', e => { if (e.target.id === id) calc(); });
+    });
+    setDefaultYear();
+    calc();
+    renderRecords();
+  </script>
 </body>
 </html>

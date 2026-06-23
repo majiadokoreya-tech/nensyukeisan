@@ -5,181 +5,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>夫婦年収管理アプリ</title>
   <style>
-    :root {
-      --bg: #f4f7fb;
-      --card: #ffffff;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --main: #2563eb;
-      --main-dark: #1d4ed8;
-      --danger: #dc2626;
-      --warn: #f59e0b;
-      --ok: #16a34a;
-      --border: #e5e7eb;
-      --soft: #f9fafb;
+    :root{
+      --bg:#f4f7fb;--card:#fff;--text:#1f2937;--muted:#6b7280;--main:#2563eb;--main-dark:#1d4ed8;--danger:#dc2626;--warn:#f59e0b;--ok:#16a34a;--border:#e5e7eb;--soft:#f9fafb;
     }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      padding: 14px;
-    }
-    .app { max-width: 860px; margin: 0 auto; }
-    h1 { font-size: 24px; margin: 8px 0 4px; }
-    h2 { font-size: 20px; margin: 0 0 12px; }
-    h3 { font-size: 16px; margin: 14px 0 8px; }
-    .sub { color: var(--muted); font-size: 14px; margin-bottom: 16px; line-height: 1.5; }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,.04);
-    }
-    label { display: block; font-weight: 700; margin: 12px 0 6px; }
-    input, textarea, select {
-      width: 100%;
-      font-size: 18px;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: #fff;
-    }
-    textarea { min-height: 86px; resize: vertical; font-size: 15px; line-height: 1.45; }
-    .grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-    @media (min-width: 650px) { .grid { grid-template-columns: 1fr 1fr; } }
-    .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    @media (min-width: 760px) { .result-grid { grid-template-columns: repeat(4, 1fr); } }
-    .result {
-      background: var(--soft);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 12px;
-      min-height: 76px;
-    }
-    .result .title { font-size: 13px; color: var(--muted); }
-    .result .num { font-size: 20px; font-weight: 800; margin-top: 4px; word-break: keep-all; }
-    .status {
-      border-radius: 14px;
-      padding: 12px;
-      font-weight: 800;
-      margin-top: 12px;
-      line-height: 1.5;
-    }
-    .ok { background: #dcfce7; color: #14532d; }
-    .warn { background: #fef3c7; color: #78350f; }
-    .danger { background: #fee2e2; color: #7f1d1d; }
-    .info { background: #dbeafe; color: #1e3a8a; }
-    .line-list { display: grid; gap: 8px; margin-top: 12px; }
-    .line-item {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 10px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: #fff;
-      font-size: 15px;
-    }
-    button {
-      border: none;
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-    }
-    .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
-    .btns3 { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 14px; }
-    @media (min-width: 650px) { .btns3 { grid-template-columns: 1fr 1fr 1fr; } }
-    .primary { background: var(--main); color: white; }
-    .primary:active { background: var(--main-dark); }
-    .gray { background: #e5e7eb; color: #111827; }
-    .red { background: #fee2e2; color: #991b1b; }
-    .green { background: #dcfce7; color: #14532d; }
-    .orange { background: #ffedd5; color: #9a3412; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th, td { padding: 10px 6px; border-bottom: 1px solid var(--border); text-align: right; vertical-align: top; }
-    th:first-child, td:first-child { text-align: left; }
-    .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 14px; }
-    .table-wrap table { min-width: 760px; }
-    .actions { display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap; }
-    .mini { padding: 7px 9px; font-size: 13px; border-radius: 9px; }
-    .empty { color: var(--muted); text-align: center; padding: 14px; }
-    .note { font-size: 12px; color: var(--muted); line-height: 1.5; }
-    .pill { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 12px; font-weight: 800; }
-    .pill.ok { background: #dcfce7; color: #14532d; }
-    .pill.warn { background: #fef3c7; color: #78350f; }
-    .pill.danger { background: #fee2e2; color: #7f1d1d; }
-    .small { font-size: 12px; color: var(--muted); }
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:14px}.app{max-width:920px;margin:0 auto}h1{font-size:24px;margin:8px 0 4px}h2{font-size:20px;margin:0 0 12px}.sub{color:var(--muted);font-size:14px;margin-bottom:16px}.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 4px 12px rgba(0,0,0,.04)}label{display:block;font-weight:800;margin:12px 0 6px}input,textarea,select{width:100%;font-size:17px;padding:11px;border:1px solid var(--border);border-radius:12px;background:#fff}textarea{min-height:72px;resize:vertical}.top-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.result{background:var(--soft);border:1px solid var(--border);border-radius:14px;padding:12px}.result .title{font-size:13px;color:var(--muted)}.result .num{font-size:21px;font-weight:900;margin-top:4px}.status{border-radius:14px;padding:12px;font-weight:900;margin-top:12px;line-height:1.5}.ok{background:#dcfce7;color:#14532d}.warn{background:#fef3c7;color:#78350f}.danger{background:#fee2e2;color:#7f1d1d}.line-list{display:grid;gap:8px;margin-top:12px}.line-item{display:flex;justify-content:space-between;gap:10px;padding:10px;border:1px solid var(--border);border-radius:12px;background:#fff;font-size:15px}.btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}button{border:none;border-radius:12px;padding:12px 14px;font-size:16px;font-weight:900;cursor:pointer}.primary{background:var(--main);color:#fff}.primary:active{background:var(--main-dark)}.gray{background:#e5e7eb;color:#111827}.red{background:#fee2e2;color:#991b1b}.green{background:#dcfce7;color:#14532d}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}.tab{background:#e5e7eb;color:#111827}.tab.active{background:var(--main);color:#fff}.month-card{border:1px solid var(--border);border-radius:16px;background:#fff;padding:12px;margin-bottom:12px}.month-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}.month-title{font-size:18px;font-weight:900}.month-sum{font-size:13px;color:var(--muted);text-align:right}.month-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.small-note{font-size:12px;color:var(--muted);line-height:1.5}.records-table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:10px 6px;border-bottom:1px solid var(--border);text-align:right}th:first-child,td:first-child{text-align:left}.actions{display:flex;gap:6px;justify-content:flex-end}.mini{padding:7px 9px;font-size:13px;border-radius:9px}.empty{color:var(--muted);text-align:center;padding:14px}.hidden{display:none!important}.import-box{white-space:pre-wrap;font-family:ui-monospace,Menlo,monospace;font-size:12px}@media(min-width:720px){.result-grid{grid-template-columns:repeat(4,1fr)}.month-grid{grid-template-columns:repeat(4,1fr)}}
   </style>
 </head>
 <body>
-  <div class="app">
-    <h1>夫婦年収管理アプリ</h1>
-    <div class="sub">年収・手取り・世帯年収・妻の130万/150万/180万ラインを管理。Googleスプレッドシート貼り付け取込にも対応。</div>
+<div class="app">
+  <h1>夫婦年収管理アプリ</h1>
+  <div class="sub">毎月入力 → 年間合計・世帯収入・妻の130万/150万/180万ラインを自動計算</div>
 
+  <div class="tabs">
+    <button id="tabInput" class="tab active" onclick="showTab('input')">毎月入力</button>
+    <button id="tabRecords" class="tab" onclick="showTab('records')">年ごとの記録</button>
+  </div>
+
+  <section id="inputSection">
     <div class="card">
-      <h2>入力</h2>
-      <div class="grid">
-        <div>
-          <label for="year">年</label>
-          <input id="year" type="number" inputmode="numeric" />
-        </div>
-        <div>
-          <label for="myIncome">私の年収（税込）</label>
-          <input id="myIncome" type="number" inputmode="numeric" placeholder="例：5000000" />
-        </div>
-        <div>
-          <label for="wifeIncome">妻の年収（税込）</label>
-          <input id="wifeIncome" type="number" inputmode="numeric" placeholder="例：1300000" />
-        </div>
-        <div>
-          <label for="myTakeHome">私の手取り</label>
-          <input id="myTakeHome" type="number" inputmode="numeric" placeholder="例：4000000" />
-        </div>
-        <div>
-          <label for="wifeTakeHome">妻の手取り</label>
-          <input id="wifeTakeHome" type="number" inputmode="numeric" placeholder="例：1100000" />
-        </div>
+      <div class="top-grid">
+        <div><label for="year">年</label><input id="year" type="number" inputmode="numeric" /></div>
+        <div><label for="unitMode">入力単位</label><select id="unitMode"><option value="yen">円で入力</option><option value="man">万円で入力</option></select></div>
       </div>
-      <label for="memo">メモ</label>
-      <textarea id="memo" placeholder="例：妻は130万円以内予定、来年は180万円を目標など"></textarea>
-
-      <div class="btns">
-        <button class="primary" onclick="saveRecord()">保存する</button>
-        <button class="gray" onclick="clearForm()">入力クリア</button>
-      </div>
+      <p class="small-note">例：円入力なら「500000」、万円入力なら「50」と入力。入力すると自動保存されます。</p>
     </div>
 
     <div class="card">
-      <h2>自動計算</h2>
+      <h2>年間合計</h2>
       <div class="result-grid">
-        <div class="result"><div class="title">世帯年収</div><div class="num" id="householdIncome">0円</div></div>
-        <div class="result"><div class="title">月収換算（税込）</div><div class="num" id="monthlyIncome">0円</div></div>
-        <div class="result"><div class="title">世帯手取り</div><div class="num" id="householdTakeHome">0円</div></div>
-        <div class="result"><div class="title">月手取り換算</div><div class="num" id="monthlyTakeHome">0円</div></div>
+        <div class="result"><div class="title">私の額面</div><div class="num" id="myGrossTotal">0円</div></div>
+        <div class="result"><div class="title">私の手取り</div><div class="num" id="myTakeTotal">0円</div></div>
+        <div class="result"><div class="title">妻の額面</div><div class="num" id="wifeGrossTotal">0円</div></div>
+        <div class="result"><div class="title">妻の手取り</div><div class="num" id="wifeTakeTotal">0円</div></div>
+        <div class="result"><div class="title">世帯年収</div><div class="num" id="houseGrossTotal">0円</div></div>
+        <div class="result"><div class="title">世帯手取り</div><div class="num" id="houseTakeTotal">0円</div></div>
+        <div class="result"><div class="title">月平均 額面</div><div class="num" id="avgGross">0円</div></div>
+        <div class="result"><div class="title">月平均 手取り</div><div class="num" id="avgTake">0円</div></div>
       </div>
-      <div id="wifeStatus" class="status info">妻の年収を入力してください</div>
+      <div id="wifeStatus" class="status ok">妻の年収ラインを表示します</div>
       <div class="line-list" id="lineList"></div>
-      <p class="note">※税金・社会保険・扶養判定は家庭状況や勤務先で変わるため、このアプリは目安管理用です。</p>
     </div>
 
     <div class="card">
-      <h2>スプレッドシート取込</h2>
-      <p class="note">Googleスプレッドシートを範囲選択してコピーし、下に貼り付けてください。今回の「年間収入」形式なら、私の額面・手取り、妻の額面を年ごとに自動登録します。</p>
-      <textarea id="sheetPaste" placeholder="スプレッドシートをコピーしてここに貼り付け"></textarea>
-      <div class="btns3">
-        <button class="primary" onclick="importSheetPaste()">貼り付け内容を取込</button>
-        <button class="green" onclick="loadSampleSheetData()">今回の入力済みデータを入れる</button>
-        <button class="gray" onclick="document.getElementById('sheetPaste').value=''">貼り付け欄クリア</button>
+      <h2>毎月入力</h2>
+      <div id="monthsArea"></div>
+      <label for="yearMemo">年間メモ</label>
+      <textarea id="yearMemo" placeholder="例：妻は130万円以内予定、賞与あり、来年は180万円を目標など"></textarea>
+      <div class="btns">
+        <button class="primary" onclick="saveCurrentYear(true)">保存する</button>
+        <button class="gray" onclick="clearCurrentYear()">この年をクリア</button>
       </div>
-      <div id="importResult" class="status info" style="display:none;"></div>
     </div>
+  </section>
 
+  <section id="recordsSection" class="hidden">
     <div class="card">
       <h2>年ごとの記録</h2>
       <div id="recordsArea"></div>
@@ -188,321 +67,63 @@
         <button class="red" onclick="deleteAll()">全削除</button>
       </div>
       <label for="importText">バックアップ読込</label>
-      <textarea id="importText" placeholder="バックアップ出力した文字を貼り付け"></textarea>
-      <button class="primary" style="width:100%; margin-top:8px;" onclick="importData()">読込する</button>
+      <textarea id="importText" class="import-box" placeholder="バックアップ出力した文字を貼り付け"></textarea>
+      <button class="primary" style="width:100%;margin-top:8px" onclick="importData()">読込する</button>
     </div>
-  </div>
 
-  <script>
-    const KEY = 'fuufu_income_manager_records_v2';
-    const OLD_KEY = 'fuufu_income_manager_records_v1';
-
-    const SAMPLE_SHEET_TEXT = `,Unnamed: 0,2021,Unnamed: 2,2022,Unnamed: 4,2023,Unnamed: 6,2024,Unnamed: 8,2025,Unnamed: 10,2026,Unnamed: 12
-0,,手取り,額面,手取り,額面,手取り,額面,手取り,額面,手取り,額面,手取り,額面
-1,1月,291015,376414,352157,432725,349124,443032,367132,458417,396970,488606,362636,471775
-2,2月,310306,397858,343502,424062,320545,410072,374506,466982,387587,480444,360267,471193
-3,3月,287407,372544,293889,370014,352998,449867,346986,436429,371574,461306,350183,457584
-4,4月,301692,388106,371343,453200,342054,435633,402243,495893,435085,531282,389206,497261
-5,5月,284738,369626,353024,434513,334431,424503,364520,456353,416550,510482,360304,465640
-6,6月,306270,380020,331408,413456,325275,407850,401207,464539,400795,506405,375863,487348
-7,夏季賞与,357674,451500,446347,576300,401564,497600,470446,574300,391386,531000,,
-8,7月,285370,357001,352023,435977,45981,66580,383728,454701,389586,492067,,
-9,8月,318498,393368,345314,428938,341492,436219,356626,427033,418833,524351,,
-10,9月,338023,414275,322040,402805,311071,401499,341831,411746,331168,426579,,
-11,10月,348612,428577,337628,429673,338475,428883,343830,422278,375151,487014,,
-12,11月,343772,423852,315582,403729,400920,495920,385773,464515,375512,488714,,
-13,冬季賞与,448849,579500,401188,507600,366058,496800,423297,538100,382967,519500,,
-14,12月,554055,418990,528358,378941,533667,409896,460117,434424,613537,420971,,
-15,合計,4776281,5751631,5093803,6091933,4763655,5804354,5422242,6505710,5686701,6868721,2198459,2850801
-16,,,,,,,,,,,,,
-17,香代ちゃん,,,,,,,,,,額面,,額面
-18,１月,,,,,,,,,,101420,,102210
-19,２月,,,,,,,,,,113540,,94930
-20,3月,,,,,,,,,,99065,,100172
-21,4月,,,,,,,,,,89360,,134860
-22,5月,,,,,,,,,,108190,,132730
-23,6月,,,,,,,,,,118935,,110623
-24,7月,,,,,,,,,,127690,,
-25,8月,,,,,,,,,,128860,,
-26,9月,,,,,,,,,,103130,,
-27,10月,,,,,,,,,,111450,,
-28,11月,,,,,,,,,,120540,,
-29,12月,,,,,,,,,,59510,,
-30,合計,,,,,,,,,,1281690,,675525
-31,,,,,,,,,,,-18310,,-624475`;
-
-    const yen = n => (Number(n) || 0).toLocaleString('ja-JP') + '円';
-    const getVal = id => Number(document.getElementById(id).value) || 0;
-    const parseNum = v => {
-      if (v === undefined || v === null) return 0;
-      const s = String(v).replace(/[\,\n\r¥￥円\s]/g, '').replace(/[０-９]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
-      const n = Number(s);
-      return Number.isFinite(n) ? n : 0;
-    };
-
-    function loadRecords() {
-      try {
-        const current = JSON.parse(localStorage.getItem(KEY));
-        if (Array.isArray(current)) return current;
-        const old = JSON.parse(localStorage.getItem(OLD_KEY));
-        if (Array.isArray(old)) {
-          localStorage.setItem(KEY, JSON.stringify(old));
-          return old;
-        }
-        return [];
-      } catch { return []; }
-    }
-    function storeRecords(records) {
-      localStorage.setItem(KEY, JSON.stringify(records));
-    }
-    function setDefaultYear() {
-      document.getElementById('year').value = new Date().getFullYear();
-    }
-    function calc() {
-      const myIncome = getVal('myIncome');
-      const wifeIncome = getVal('wifeIncome');
-      const myTakeHome = getVal('myTakeHome');
-      const wifeTakeHome = getVal('wifeTakeHome');
-      const household = myIncome + wifeIncome;
-      const takeHome = myTakeHome + wifeTakeHome;
-      document.getElementById('householdIncome').textContent = yen(household);
-      document.getElementById('monthlyIncome').textContent = yen(Math.round(household / 12));
-      document.getElementById('householdTakeHome').textContent = yen(takeHome);
-      document.getElementById('monthlyTakeHome').textContent = yen(Math.round(takeHome / 12));
-      updateWifeStatus(wifeIncome, document.getElementById('wifeIncome').value.trim() !== '');
-    }
-    function updateWifeStatus(wifeIncome, hasInput) {
-      const box = document.getElementById('wifeStatus');
-      box.className = 'status';
-      if (!hasInput) {
-        box.classList.add('info');
-        box.textContent = '妻の年収を入力してください';
-      } else if (wifeIncome <= 1300000) {
-        box.classList.add('ok');
-        box.textContent = '妻の年収：130万円以内です。扶養ラインを意識するなら安全寄り。';
-      } else if (wifeIncome <= 1500000) {
-        box.classList.add('warn');
-        box.textContent = '妻の年収：130万円超〜150万円以内です。社会保険や扶養の確認が必要。';
-      } else if (wifeIncome <= 1800000) {
-        box.classList.add('warn');
-        box.textContent = '妻の年収：150万円超〜180万円以内です。働き損にならないか確認したいライン。';
-      } else {
-        box.classList.add('danger');
-        box.textContent = '妻の年収：180万円超です。扶養より世帯手取り重視で考えるライン。';
-      }
-      const lines = [1300000, 1500000, 1800000];
-      document.getElementById('lineList').innerHTML = lines.map(line => {
-        const diff = line - wifeIncome;
-        const text = diff >= 0 ? `あと ${yen(diff)}` : `${yen(Math.abs(diff))} 超過`;
-        return `<div class="line-item"><strong>${(line/10000).toLocaleString()}万円ライン</strong><span>${text}</span></div>`;
-      }).join('');
-    }
-    function makeRecord({ year, myIncome = 0, wifeIncome = 0, myTakeHome = 0, wifeTakeHome = 0, memo = '' }) {
-      return {
-        year: Number(year),
-        myIncome: Number(myIncome) || 0,
-        wifeIncome: Number(wifeIncome) || 0,
-        myTakeHome: Number(myTakeHome) || 0,
-        wifeTakeHome: Number(wifeTakeHome) || 0,
-        memo,
-        updatedAt: new Date().toLocaleString('ja-JP')
-      };
-    }
-    function upsertRecords(newRecords) {
-      let records = loadRecords();
-      newRecords.forEach(record => {
-        const idx = records.findIndex(r => Number(r.year) === Number(record.year));
-        if (idx >= 0) records[idx] = { ...records[idx], ...record, updatedAt: new Date().toLocaleString('ja-JP') };
-        else records.push(record);
-      });
-      records.sort((a,b) => Number(b.year) - Number(a.year));
-      storeRecords(records);
-      renderRecords();
-      return records;
-    }
-    function saveRecord() {
-      const year = getVal('year');
-      if (!year) return alert('年を入力してください');
-      const record = makeRecord({
-        year,
-        myIncome: getVal('myIncome'),
-        wifeIncome: getVal('wifeIncome'),
-        myTakeHome: getVal('myTakeHome'),
-        wifeTakeHome: getVal('wifeTakeHome'),
-        memo: document.getElementById('memo').value.trim()
-      });
-      upsertRecords([record]);
-      alert('保存しました');
-    }
-    function editRecord(year) {
-      const r = loadRecords().find(x => Number(x.year) === Number(year));
-      if (!r) return;
-      document.getElementById('year').value = r.year;
-      document.getElementById('myIncome').value = r.myIncome || '';
-      document.getElementById('wifeIncome').value = r.wifeIncome || '';
-      document.getElementById('myTakeHome').value = r.myTakeHome || '';
-      document.getElementById('wifeTakeHome').value = r.wifeTakeHome || '';
-      document.getElementById('memo').value = r.memo || '';
-      calc();
-      scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    function deleteRecord(year) {
-      if (!confirm(year + '年の記録を削除しますか？')) return;
-      storeRecords(loadRecords().filter(r => Number(r.year) !== Number(year)));
-      renderRecords();
-    }
-    function lineClass(wifeIncome) {
-      if (!wifeIncome) return 'ok';
-      if (wifeIncome <= 1300000) return 'ok';
-      if (wifeIncome <= 1800000) return 'warn';
-      return 'danger';
-    }
-    function renderRecords() {
-      const records = loadRecords();
-      const area = document.getElementById('recordsArea');
-      if (!records.length) {
-        area.innerHTML = '<div class="empty">まだ記録がありません</div>';
-        return;
-      }
-      area.innerHTML = `<div class="table-wrap"><table>
-        <thead><tr><th>年</th><th>私 額面</th><th>私 手取り</th><th>妻 額面</th><th>妻 手取り</th><th>世帯年収</th><th>月収換算</th><th>妻ライン</th><th>操作</th></tr></thead>
-        <tbody>${records.map(r => {
-          const household = (Number(r.myIncome)||0) + (Number(r.wifeIncome)||0);
-          const cls = lineClass(Number(r.wifeIncome)||0);
-          const label = !r.wifeIncome ? '未入力' : (r.wifeIncome <= 1300000 ? '130万以内' : (r.wifeIncome <= 1500000 ? '150万以内' : (r.wifeIncome <= 1800000 ? '180万以内' : '180万超')));
-          return `<tr>
-            <td><strong>${r.year}</strong><div class="small">${r.memo ? escapeHtml(r.memo) : ''}</div></td>
-            <td>${yen(r.myIncome)}</td>
-            <td>${yen(r.myTakeHome)}</td>
-            <td>${yen(r.wifeIncome)}</td>
-            <td>${yen(r.wifeTakeHome)}</td>
-            <td><strong>${yen(household)}</strong></td>
-            <td>${yen(Math.round(household / 12))}</td>
-            <td><span class="pill ${cls}">${label}</span></td>
-            <td><div class="actions"><button class="mini gray" onclick="editRecord(${r.year})">編集</button><button class="mini red" onclick="deleteRecord(${r.year})">削除</button></div></td>
-          </tr>`;
-        }).join('')}</tbody></table></div>`;
-    }
-    function escapeHtml(str) {
-      return String(str).replace(/[&<>'"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[c]));
-    }
-    function clearForm() {
-      ['myIncome','wifeIncome','myTakeHome','wifeTakeHome','memo'].forEach(id => document.getElementById(id).value = '');
-      setDefaultYear();
-      calc();
-    }
-    function deleteAll() {
-      if (!confirm('すべての記録を削除しますか？')) return;
-      localStorage.removeItem(KEY);
-      localStorage.removeItem(OLD_KEY);
-      renderRecords();
-      clearForm();
-    }
-    async function exportData() {
-      const text = JSON.stringify(loadRecords(), null, 2);
-      document.getElementById('importText').value = text;
-      try {
-        await navigator.clipboard.writeText(text);
-        alert('バックアップをコピーしました。貼り付け欄にも表示しました。');
-      } catch {
-        alert('貼り付け欄にバックアップを表示しました。必要なら手動でコピーしてください。');
-      }
-    }
-    function importData() {
-      try {
-        const data = JSON.parse(document.getElementById('importText').value);
-        if (!Array.isArray(data)) throw new Error('形式エラー');
-        const clean = data.filter(r => r && r.year).map(r => makeRecord(r));
-        storeRecords(clean.sort((a,b) => Number(b.year) - Number(a.year)));
-        renderRecords();
-        alert('読込しました');
-      } catch(e) {
-        alert('読込できません。バックアップ文字を確認してください。');
-      }
-    }
-
-    function splitRows(text) {
-      return String(text || '').trim().split(/\r?\n/).map(line => {
-        if (line.includes('\t')) return line.split('\t');
-        return line.split(',');
-      });
-    }
-    function findYearColumns(headerRow, secondRow) {
-      const result = {};
-      headerRow.forEach((cell, i) => {
-        const y = parseNum(cell);
-        if (y >= 2000 && y <= 2100) {
-          const a = String(secondRow[i] || '');
-          const b = String(secondRow[i + 1] || '');
-          let takeHomeCol = i;
-          let grossCol = i + 1;
-          if (a.includes('額面') && b.includes('手取り')) {
-            grossCol = i;
-            takeHomeCol = i + 1;
-          }
-          result[y] = { takeHomeCol, grossCol };
-        }
-      });
-      return result;
-    }
-    function importSheetPaste() {
-      const text = document.getElementById('sheetPaste').value;
-      const parsed = parseAnnualIncomeSheet(text);
-      if (!parsed.length) {
-        showImportResult('取込できませんでした。スプレッドシートの範囲を広めにコピーして貼り付けてください。', 'danger');
-        return;
-      }
-      upsertRecords(parsed);
-      showImportResult(`${parsed.length}年分を取込しました：${parsed.map(r => r.year + '年').join('、')}`, 'ok');
-    }
-    function loadSampleSheetData() {
-      document.getElementById('sheetPaste').value = SAMPLE_SHEET_TEXT;
-      importSheetPaste();
-    }
-    function parseAnnualIncomeSheet(text) {
-      const rows = splitRows(text);
-      if (rows.length < 3) return [];
-      let headerIdx = rows.findIndex(row => row.some(c => parseNum(c) >= 2000 && parseNum(c) <= 2100));
-      if (headerIdx < 0 || headerIdx + 1 >= rows.length) return [];
-      const header = rows[headerIdx];
-      const second = rows[headerIdx + 1] || [];
-      const yearCols = findYearColumns(header, second);
-      const totalRows = rows.filter(row => String(row[1] || row[0] || '').includes('合計'));
-      const myTotalRow = totalRows[0];
-      const wifeTotalRow = totalRows[1];
-      if (!myTotalRow) return [];
-      return Object.keys(yearCols).map(y => {
-        const cols = yearCols[y];
-        const year = Number(y);
-        const myTakeHome = parseNum(myTotalRow[cols.takeHomeCol]);
-        const myIncome = parseNum(myTotalRow[cols.grossCol]);
-        let wifeIncome = 0;
-        if (wifeTotalRow) {
-          wifeIncome = parseNum(wifeTotalRow[cols.grossCol]) || parseNum(wifeTotalRow[cols.takeHomeCol]);
-        }
-        return makeRecord({
-          year,
-          myIncome,
-          myTakeHome,
-          wifeIncome,
-          wifeTakeHome: 0,
-          memo: 'スプレッドシートから取込'
-        });
-      }).filter(r => r.myIncome || r.myTakeHome || r.wifeIncome);
-    }
-    function showImportResult(message, type) {
-      const box = document.getElementById('importResult');
-      box.style.display = 'block';
-      box.className = 'status ' + type;
-      box.textContent = message;
-    }
-
-    ['year','myIncome','wifeIncome','myTakeHome','wifeTakeHome','memo'].forEach(id => {
-      document.addEventListener('input', e => { if (e.target.id === id) calc(); });
-    });
-    setDefaultYear();
-    calc();
-    renderRecords();
-  </script>
+    <div class="card">
+      <h2>スプレッドシート取込</h2>
+      <p class="small-note">今までの「年間収入」シートの入力済みデータを登録できます。</p>
+      <button class="green" style="width:100%" onclick="loadPresetSheetData()">今回の入力済みデータを入れる</button>
+    </div>
+  </section>
+</div>
+<script>
+const KEY='fuufu_income_monthly_records_v2';
+const MONTHS=['1月','2月','3月','4月','5月','6月','夏季賞与','7月','8月','9月','10月','11月','冬季賞与','12月'];
+const yen=n=>(Math.round(Number(n)||0)).toLocaleString('ja-JP')+'円';
+const el=id=>document.getElementById(id);
+function factor(){return el('unitMode').value==='man'?10000:1}
+function displayValue(yenValue){const f=factor();return yenValue? (yenValue/f) : ''}
+function inputToYen(v){return (Number(v)||0)*factor()}
+function blankMonths(){return MONTHS.map(name=>({name,myGross:0,myTake:0,wifeGross:0,wifeTake:0,memo:''}))}
+function loadRecords(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch{return[]}}
+function storeRecords(records){localStorage.setItem(KEY,JSON.stringify(records))}
+function currentYear(){return Number(el('year').value)||new Date().getFullYear()}
+function getCurrentMonths(){return MONTHS.map((name,i)=>({name,myGross:inputToYen(el('myGross_'+i).value),myTake:inputToYen(el('myTake_'+i).value),wifeGross:inputToYen(el('wifeGross_'+i).value),wifeTake:inputToYen(el('wifeTake_'+i).value),memo:el('memo_'+i).value.trim()}))}
+function totals(months){return months.reduce((a,m)=>{a.myGross+=Number(m.myGross)||0;a.myTake+=Number(m.myTake)||0;a.wifeGross+=Number(m.wifeGross)||0;a.wifeTake+=Number(m.wifeTake)||0;return a},{myGross:0,myTake:0,wifeGross:0,wifeTake:0})}
+function renderMonths(months=blankMonths()){
+  el('monthsArea').innerHTML=MONTHS.map((name,i)=>{const m=months[i]||{};return `<div class="month-card"><div class="month-head"><div class="month-title">${name}</div><div class="month-sum" id="sum_${i}">月合計 0円</div></div><div class="month-grid"><div><label>私の額面</label><input id="myGross_${i}" type="number" inputmode="decimal" value="${displayValue(m.myGross)}"></div><div><label>私の手取り</label><input id="myTake_${i}" type="number" inputmode="decimal" value="${displayValue(m.myTake)}"></div><div><label>妻の額面</label><input id="wifeGross_${i}" type="number" inputmode="decimal" value="${displayValue(m.wifeGross)}"></div><div><label>妻の手取り</label><input id="wifeTake_${i}" type="number" inputmode="decimal" value="${displayValue(m.wifeTake)}"></div></div><label>メモ</label><input id="memo_${i}" type="text" value="${escapeAttr(m.memo||'')}" placeholder="例：残業多め、賞与など"></div>`}).join('');
+  document.querySelectorAll('#monthsArea input').forEach(x=>x.addEventListener('input',()=>{calc();autoSave()}));calc();
+}
+function escapeAttr(s){return String(s).replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;').replaceAll('>','&gt;')}
+function calc(){const months=getCurrentMonths();const t=totals(months);el('myGrossTotal').textContent=yen(t.myGross);el('myTakeTotal').textContent=yen(t.myTake);el('wifeGrossTotal').textContent=yen(t.wifeGross);el('wifeTakeTotal').textContent=yen(t.wifeTake);el('houseGrossTotal').textContent=yen(t.myGross+t.wifeGross);el('houseTakeTotal').textContent=yen(t.myTake+t.wifeTake);el('avgGross').textContent=yen((t.myGross+t.wifeGross)/12);el('avgTake').textContent=yen((t.myTake+t.wifeTake)/12);months.forEach((m,i)=>{el('sum_'+i).textContent='月合計 '+yen((m.myGross||0)+(m.wifeGross||0))});updateWifeStatus(t.wifeGross)}
+function updateWifeStatus(wifeIncome){const box=el('wifeStatus');box.className='status';let msg='';if(!wifeIncome){box.classList.add('ok');msg='妻の年収を入力するとライン判定します。'}else if(wifeIncome<=1300000){box.classList.add('ok');msg='妻の年収：130万円以内です。扶養ラインを意識するなら安全寄り。'}else if(wifeIncome<=1500000){box.classList.add('warn');msg='妻の年収：130万円超〜150万円以内です。社会保険や扶養の確認が必要。'}else if(wifeIncome<=1800000){box.classList.add('warn');msg='妻の年収：150万円超〜180万円以内です。働き損にならないか確認したいライン。'}else{box.classList.add('danger');msg='妻の年収：180万円超です。扶養より世帯手取り重視で考えるライン。'}box.textContent=msg;el('lineList').innerHTML=[1300000,1500000,1800000].map(line=>{const diff=line-wifeIncome;const text=diff>=0?`あと ${yen(diff)}`:`${yen(Math.abs(diff))} 超過`;return `<div class="line-item"><strong>${line/10000}万円ライン</strong><span>${text}</span></div>`}).join('')}
+function makeRecord(){const months=getCurrentMonths();const t=totals(months);return{year:currentYear(),months,memo:el('yearMemo').value.trim(),myIncome:t.myGross,myTakeHome:t.myTake,wifeIncome:t.wifeGross,wifeTakeHome:t.wifeTake,updatedAt:new Date().toLocaleString('ja-JP')}}
+function saveCurrentYear(showAlert=false){const record=makeRecord();let records=loadRecords();const idx=records.findIndex(r=>Number(r.year)===Number(record.year));if(idx>=0)records[idx]=record;else records.push(record);records.sort((a,b)=>Number(b.year)-Number(a.year));storeRecords(records);renderRecords();if(showAlert)alert('保存しました')}
+let saveTimer=null;function autoSave(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>saveCurrentYear(false),400)}
+function loadYear(year){const r=loadRecords().find(x=>Number(x.year)===Number(year));el('year').value=year;el('yearMemo').value=r?.memo||'';renderMonths(r?.months||blankMonths());showTab('input');scrollTo({top:0,behavior:'smooth'})}
+function clearCurrentYear(){if(!confirm(currentYear()+'年の入力をクリアしますか？'))return;el('yearMemo').value='';renderMonths(blankMonths());saveCurrentYear(false)}
+function renderRecords(){const records=loadRecords();const area=el('recordsArea');if(!records.length){area.innerHTML='<div class="empty">まだ記録がありません</div>';return}area.innerHTML=`<table class="records-table"><thead><tr><th>年</th><th>世帯年収</th><th>世帯手取り</th><th>妻年収</th><th>操作</th></tr></thead><tbody>${records.map(r=>`<tr><td>${r.year}</td><td>${yen((r.myIncome||0)+(r.wifeIncome||0))}</td><td>${yen((r.myTakeHome||0)+(r.wifeTakeHome||0))}</td><td>${yen(r.wifeIncome)}</td><td><div class="actions"><button class="mini gray" onclick="loadYear(${r.year})">開く</button><button class="mini red" onclick="deleteRecord(${r.year})">削除</button></div></td></tr>`).join('')}</tbody></table>`}
+function deleteRecord(year){if(!confirm(year+'年の記録を削除しますか？'))return;storeRecords(loadRecords().filter(r=>Number(r.year)!==Number(year)));renderRecords()}
+function deleteAll(){if(!confirm('すべての記録を削除しますか？'))return;localStorage.removeItem(KEY);renderRecords();renderMonths(blankMonths())}
+function exportData(){const text=JSON.stringify(loadRecords(),null,2);el('importText').value=text;if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('バックアップをコピーしました')).catch(()=>alert('下の欄に表示しました。手動でコピーしてください'))}else alert('下の欄に表示しました。手動でコピーしてください')}
+function importData(){try{const data=JSON.parse(el('importText').value);if(!Array.isArray(data))throw new Error();storeRecords(data);renderRecords();alert('読込しました')}catch{alert('読込できません。バックアップ文字を確認してください。')}}
+function showTab(tab){el('inputSection').classList.toggle('hidden',tab!=='input');el('recordsSection').classList.toggle('hidden',tab!=='records');el('tabInput').classList.toggle('active',tab==='input');el('tabRecords').classList.toggle('active',tab==='records');if(tab==='records')renderRecords()}
+function loadPresetSheetData(){
+ const data={
+  2021:{myTake:[291015,310306,287407,301692,284738,306270,357674,285370,318498,338023,348612,343772,448849,554055],myGross:[376414,397858,372544,388106,369626,380020,451500,357001,393368,414275,428577,423852,579500,418990]},
+  2022:{myTake:[352157,343502,293889,371343,353024,331408,446347,352023,345314,322040,337628,315582,401188,528358],myGross:[432725,424062,370014,453200,434513,413456,576300,435977,428938,402805,429673,403729,507600,378941]},
+  2023:{myTake:[349124,320545,352998,342054,334431,325275,401564,45981,341492,311071,338475,400920,366058,533667],myGross:[443032,410072,449867,435633,424503,407850,497600,66580,436219,401499,428883,495920,496800,409896]},
+  2024:{myTake:[367132,374506,346986,402243,364520,401207,470446,383728,356626,341831,343830,385773,423297,460117],myGross:[458417,466982,436429,495893,456353,464539,574300,454701,427033,411746,422278,464515,538100,434424]},
+  2025:{myTake:[396970,387587,371574,435085,416550,400795,391386,389586,418833,331168,375151,375512,382967,613537],myGross:[488606,480444,461306,531282,510482,506405,531000,492067,524351,426579,487014,488714,519500,420971],wifeGross:[101420,113540,99065,89360,108190,118935,0,127690,128860,103130,111450,120540,0,59510]},
+  2026:{myTake:[362636,360267,350183,389206,360304,375863,0,0,0,0,0,0,0,0],myGross:[471775,471193,457584,497261,465640,487348,0,0,0,0,0,0,0,0],wifeGross:[102210,94930,100172,134860,132730,110623,0,0,0,0,0,0,0,0]}
+ };
+ let records=loadRecords();
+ Object.entries(data).forEach(([year,d])=>{const months=MONTHS.map((name,i)=>({name,myGross:d.myGross[i]||0,myTake:d.myTake[i]||0,wifeGross:d.wifeGross?d.wifeGross[i]||0:0,wifeTake:0,memo:''}));const t=totals(months);const record={year:Number(year),months,memo:'スプレッドシートから取込',myIncome:t.myGross,myTakeHome:t.myTake,wifeIncome:t.wifeGross,wifeTakeHome:t.wifeTake,updatedAt:new Date().toLocaleString('ja-JP')};const idx=records.findIndex(r=>Number(r.year)===Number(year));if(idx>=0)records[idx]=record;else records.push(record)});
+ records.sort((a,b)=>Number(b.year)-Number(a.year));storeRecords(records);renderRecords();alert('2021〜2026年を登録しました')
+}
+el('year').value=new Date().getFullYear();el('year').addEventListener('input',()=>{const r=loadRecords().find(x=>Number(x.year)===currentYear());el('yearMemo').value=r?.memo||'';renderMonths(r?.months||blankMonths())});el('unitMode').addEventListener('change',()=>{const months=getCurrentMonths();renderMonths(months)});el('yearMemo').addEventListener('input',autoSave);const first=loadRecords().find(r=>Number(r.year)===currentYear());el('yearMemo').value=first?.memo||'';renderMonths(first?.months||blankMonths());renderRecords();
+</script>
 </body>
 </html>
